@@ -645,6 +645,7 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
         <h3 tabindex="-1">Application received</h3>
         <p>Thanks for reaching out — we’ll be in touch shortly.</p>
         <p class="refnum" id="refnum" hidden></p>
+        <p class="refnum" id="deletelink" hidden><a href="/delete.html" style="color:inherit;text-decoration:underline">Delete this application anytime</a></p>
         <button id="reset" class="btn btn--ghost" type="button">Try again</button>
       </div>
     </div>
@@ -673,6 +674,7 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
       <button class="share" id="shareBtn" type="button">Share this page ↗</button>
       <a href="https://www.instagram.com/papichulo_dreaded/" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
       <a href="/privacy.html">Privacy</a>
+      <a href="/delete.html">Delete your data</a>
       <a href="/terms.html">Terms</a>
       <a href="mailto:business@wolfpaqmarketing.com">Contact</a>
     </div>
@@ -775,6 +777,11 @@ form.addEventListener('submit',async event=>{
     try{ localStorage.removeItem('sf7_draft'); }catch(e){}
     const ref=document.querySelector('#refnum');
     if(ref && data.id){ ref.hidden=false; ref.textContent='Your reference: #'+data.id; }
+    const del=document.querySelector('#deletelink');
+    if(del && data.delete_token){
+      del.hidden=false;
+      del.querySelector('a').href='/delete.html?email='+encodeURIComponent(payload.email)+'&token='+encodeURIComponent(data.delete_token);
+    }
     answers={};fields.replaceChildren();form.hidden=true;done.hidden=false;done.querySelector('h3').focus();
   }catch(err){
     errEl.hidden=false;

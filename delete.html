@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Delete your information · Skip to 7 Figures</title>
+<meta name="robots" content="noindex, follow">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1B1611;--cream:#F8F5EF;--gold:#C99B54;--goldlt:#F1CB88;--muted:#6B6459;--line:rgba(27,22,17,.14);--serif:'Fraunces',ui-serif,Georgia,serif;--sans:'Inter',system-ui,-apple-system,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font:400 16px/1.65 var(--sans);-webkit-font-smoothing:antialiased}
+.wrap{max-width:520px;margin-inline:auto;padding:0 22px 70px}
+header.top{background:#17130F;color:#FBF6EC;border-bottom:1px solid rgba(201,155,84,.3)}
+header.top .wrap{padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+header.top img{width:92px;height:auto}
+header.top a{color:var(--goldlt);text-decoration:none;font:600 .88rem/1 var(--sans)}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(1.9rem,4.6vw,2.6rem);letter-spacing:-.03em;line-height:1.08;margin:48px 0 12px}
+.lede{color:var(--muted);margin:0 0 28px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px}
+label{display:block;font:600 .74rem/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:16px 0 7px}
+input{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:10px;background:var(--cream);font:400 .95rem/1.4 var(--sans);color:var(--ink)}
+input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,155,84,.16)}
+button{margin-top:22px;width:100%;background:var(--gold);color:#1B1611;border:0;border-radius:100px;padding:16px 24px;font:700 .93rem/1 var(--sans);cursor:pointer}
+button:disabled{opacity:.6;cursor:default}
+.msg{margin-top:18px;padding:13px 15px;border-radius:10px;font-size:.92rem;display:none}
+.msg.ok{display:block;background:#E9F3EC;border:1px solid #A9CFB7;color:#1F5C3A}
+.msg.bad{display:block;background:#FCEBE7;border:1px solid #E6B7AC;color:#8A2E22}
+.help{margin-top:24px;font-size:.86rem;color:var(--muted)}
+.help a{color:#9A7038}
+code{background:#F0E9DA;padding:2px 6px;border-radius:5px;font-size:.9em}
+</style></head>
+<body>
+<header class="top"><div class="wrap"><img src="header-logo.webp" alt="Skip to 7 Figures LLC"><a href="/">← Back to the site</a></div></header>
+<main class="wrap">
+  <h1>Delete your information</h1>
+  <p class="lede">If you sent us an application and want it removed, enter the email address you used and the delete code you were given when you applied.</p>
+  <div class="card">
+    <form id="delForm">
+      <label for="email">Email address</label>
+      <input id="email" name="email" type="email" autocomplete="email" required>
+      <label for="token">Delete code</label>
+      <input id="token" name="token" type="text" required placeholder="the code from your confirmation">
+      <button id="delBtn" type="submit">Delete my information</button>
+    </form>
+    <div class="msg" id="msg"></div>
+  </div>
+  <p class="help">Lost your code? Email <a href="mailto:business@wolfpaqmarketing.com">business@wolfpaqmarketing.com</a> from the same address and we will remove it for you. Read the <a href="/privacy.html">privacy policy</a>.</p>
+</main>
+<script>
+const API='https://skip-to-7-figures-admin.skip7figures.workers.dev';
+const q=new URLSearchParams(location.search);
+if(q.get('email')) document.getElementById('email').value=q.get('email');
+if(q.get('token')) document.getElementById('token').value=q.get('token');
+const msg=document.getElementById('msg'), btn=document.getElementById('delBtn');
+document.getElementById('delForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  btn.disabled=true; btn.textContent='Deleting…';
+  msg.className='msg';
+  try{
+    const r=await fetch(API+'/api/delete-my-data',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      email:document.getElementById('email').value.trim(),
+      token:document.getElementById('token').value.trim()
+    })});
+    const d=await r.json().catch(()=>({}));
+    if(r.ok&&d.ok){ msg.className='msg ok'; msg.textContent='Your information has been deleted. ('+(d.removed||1)+' application'+(d.removed===1?'':'s')+' removed)'; }
+    else { msg.className='msg bad'; msg.textContent=d.error||'We could not delete that. Check the email and delete code and try again.'; }
+  }catch(err){ msg.className='msg bad'; msg.textContent='Network error — please try again in a moment.'; }
+  btn.disabled=false; btn.textContent='Delete my information';
+});
+</script>
+</body></html>
