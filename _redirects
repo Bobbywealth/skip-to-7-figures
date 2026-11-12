@@ -1,0 +1,4 @@
+# Serve index.html at the root while keeping .html pages at their real paths.
+# (html_handling = "none" is what lets /privacy.html load directly instead of
+#  redirecting to /privacy/ - this line restores the root mapping.)
+/ /index.html 200

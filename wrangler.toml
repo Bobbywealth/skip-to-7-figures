@@ -1,0 +1,15 @@
+# Cloudflare Worker (assets-only) for the Skip to 7 Figures funnel.
+# Free tier, no card, never expires - unlike the Render workspace whose card is declined.
+name = "skip-to-7-figures"
+compatibility_date = "2026-11-01"
+
+[build]
+command = "node scripts/build.mjs"
+
+[assets]
+directory = "./dist"
+not_found_handling = "404-page"
+html_handling = "none"
+
+[observability]
+enabled = true

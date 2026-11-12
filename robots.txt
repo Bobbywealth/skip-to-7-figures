@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin
 
-Sitemap: https://skip-to-7-figures.onrender.com/sitemap.xml
+Sitemap: https://skip-to-7-figures.skip7figures.workers.dev/sitemap.xml

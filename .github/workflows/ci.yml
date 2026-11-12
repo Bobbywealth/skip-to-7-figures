@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    name: Build and verify the site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # scripts/build.mjs copies the site into dist/ and FAILS if a referenced
+      # asset is missing, if an inline script came back (the CSP has no
+      # unsafe-inline), or if a page is missing a viewport/title.
+      - name: Build and verify
+        run: node scripts/build.mjs
+
+      - name: Check the app bundle parses
+        run: node --check app.js
+
+      - name: Check no secrets are committed
+        run: |
+          if grep -rInE "[0-9]{8,10}:[A-Za-z0-9_-]{30,}|sk_live_|sk_test_|Bearer [A-Za-z0-9._-]{20,}" \
+            --exclude-dir=.git --exclude-dir=dist .; then
+            echo "::error::a credential appears to be committed"
+            exit 1
+          fi
+          echo "no secrets found"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site-dist
+          path: dist
+          retention-days: 3

@@ -1,0 +1,42 @@
+# Cloudflare Pages security headers - Skip to 7 Figures
+# No inline scripts are used (the app logic lives in app.js), so script-src
+# does NOT need 'unsafe-inline'.
+
+/*
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; img-src 'self' data:; media-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self'; connect-src 'self' https://skip-to-7-figures-admin.skip7figures.workers.dev; upgrade-insecure-requests
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=(), browsing-topics=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Cross-Origin-Opener-Policy: same-origin
+  X-Robots-Tag: index, follow, max-image-preview:large
+
+# the admin lives on a different host - never let it be indexed
+/admin*
+  X-Robots-Tag: noindex, nofollow
+  X-Frame-Options: DENY
+
+# long-cache the heavy static assets
+/hero.mp4
+  Cache-Control: public, max-age=31536000, immutable
+/hero-mobile.mp4
+  Cache-Control: public, max-age=31536000, immutable
+/testimonial-*.webp
+  Cache-Control: public, max-age=31536000, immutable
+/hero-poster.jpg
+  Cache-Control: public, max-age=31536000, immutable
+/founder*.webp
+  Cache-Control: public, max-age=31536000, immutable
+/header-logo.webp
+  Cache-Control: public, max-age=31536000, immutable
+/og.jpg
+  Cache-Control: public, max-age=31536000, immutable
+
+# html must not be cached hard, or a deploy will look unchanged
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+/robots.txt
+  Cache-Control: public, max-age=3600
+/sitemap.xml
+  Cache-Control: public, max-age=3600
