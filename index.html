@@ -650,7 +650,8 @@ render();
   try{
     if(!sessionStorage.getItem('sf7_seen')){
       sessionStorage.setItem('sf7_seen','1');
-      navigator.sendBeacon(API+'/api/track',new Blob([JSON.stringify({path:'/'})],{type:'application/json'}));
+      /* text/plain keeps this a simple request so it never needs a CORS preflight */
+      navigator.sendBeacon(API+'/api/track?path='+encodeURIComponent(location.pathname||'/'),new Blob([''],{type:'text/plain;charset=UTF-8'}));
     }
   }catch(e){}
 })();
