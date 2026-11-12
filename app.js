@@ -6,6 +6,35 @@
 document.documentElement.classList.add('js');
 const API='https://skip-to-7-figures-admin.skip7figures.workers.dev';
 
+/* ---------- Cloudflare Turnstile (bot protection) ---------- */
+const TS_SITEKEY='0x4AAAAAAF-4Gnj0g3OX0_Xe';
+let tsWidget=null, tsToken='', tsReady=false;
+function sf7TurnstileReady(){ tsReady=true; mountTurnstile(); }
+function mountTurnstile(){
+  if(tsWidget!==null||!window.turnstile) return;
+  const host=document.getElementById('cf-turnstile');
+  if(!host||!host.isConnected) return;
+  try{
+    tsWidget=window.turnstile.render(host,{
+      sitekey:TS_SITEKEY,
+      callback:(t)=>{ tsToken=t; },
+      'expired-callback':()=>{ tsToken=''; },
+      'error-callback':()=>{ tsToken=''; }
+    });
+  }catch(e){ tsToken=''; }
+}
+function waitForTurnstile(ms){
+  const started=Date.now();
+  return new Promise(resolve=>{
+    const tick=()=>{
+      if(tsToken) return resolve(true);
+      if(Date.now()-started>ms) return resolve(false);
+      setTimeout(tick,250);
+    };
+    tick();
+  });
+}
+
 /* ---------- visitor id, UTM capture, funnel tracking ---------- */
 const UID=(function(){try{let v=localStorage.getItem('sf7_vid');if(!v){v='v'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);localStorage.setItem('sf7_vid',v);}return v;}catch(e){return 'v'+Math.random().toString(36).slice(2,10);}})();
 const UTM=(function(){
@@ -52,8 +81,9 @@ function render(focus=false){
   back.hidden=index===0;
   next.textContent=index===questions.length?'Send application':'Continue';
   if(index===questions.length){
-    fields.innerHTML='<fieldset><legend tabindex="-1">How can we reach you?</legend><label class="field"><span>Email</span><input type="email" name="email" autocomplete="email" required></label><label class="field"><span>Phone number</span><input type="tel" name="phone" autocomplete="tel" inputmode="tel" required></label></fieldset>';
+    fields.innerHTML='<fieldset><legend tabindex="-1">How can we reach you?</legend><label class="field"><span>Email</span><input type="email" name="email" autocomplete="email" required></label><label class="field"><span>Phone number</span><input type="tel" name="phone" autocomplete="tel" inputmode="tel" required></label></fieldset><div id="cf-turnstile" style="margin-top:18px;min-height:0"></div>';
     for(const key of ['email','phone']) form.elements[key].value=answers[key]||'';
+    if(tsReady) mountTurnstile();
   }else{
     const [key,title,options]=questions[index];
     fields.innerHTML='<fieldset><legend tabindex="-1">'+title+'</legend>'+options.map(option=>'<label class="option"><input type="radio" required name="'+key+'" value="'+option+'" '+(answers[key]===option?'checked':'')+'>'+option+'</label>').join('')+'</fieldset>';
@@ -72,6 +102,16 @@ form.addEventListener('submit',async event=>{
   if(index<questions.length){index++;render(true);return}
   sending=true; next.disabled=true; next.textContent='Sending…';
   const errEl=document.querySelector('#formError');
+  if(window.turnstile && !tsToken){
+    next.textContent='Checking…';
+    const okToken=await waitForTurnstile(15000);
+    if(!okToken){
+      errEl.hidden=false;
+      errEl.textContent='The human check did not load. Please refresh the page and try again, or email us directly.';
+      sending=false; next.disabled=false; next.textContent='Send application';
+      return;
+    }
+  }
   const emailVal=(form.elements.email?form.elements.email.value:'').trim();
   const phoneVal=(form.elements.phone?form.elements.phone.value:'').trim();
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(emailVal)){ errEl.hidden=false; errEl.textContent='Please enter a valid email address so we can reply.'; sending=false; next.disabled=false; next.textContent='Send application'; return; }
@@ -84,7 +124,8 @@ form.addEventListener('submit',async event=>{
     capital:answers.capital,timeline:answers.timeline,experience:answers.experience,
     interest:answers.interest,decision:answers.decision,
     source:'funnel',page_url:location.href,
-    visitor_id:UID, ...UTM
+    visitor_id:UID, ...UTM,
+    cf_turnstile_response:tsToken
   };
   try{
     const res=await fetch(API+'/api/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
