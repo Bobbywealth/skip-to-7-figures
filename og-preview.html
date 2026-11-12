@@ -1,0 +1,39 @@
+<!doctype html>
+<!--
+  Social preview card generator for Skip to 7 Figures.
+  Renders at exactly 1200x630 (the Open Graph / Twitter summary_large_image size).
+  Regenerate: serve this folder over http, open og-preview.html at 1200x630, screenshot to og.png.
+-->
+<html lang="en"><head><meta charset="utf-8">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1200px;height:630px;overflow:hidden;background:#211a15;color:#fff7ea;
+       font:400 16px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+       display:grid;grid-template-columns:1.06fr .94fr;position:relative}
+  .bg{position:absolute;inset:0;
+      background:radial-gradient(ellipse 70% 90% at 78% 42%,rgba(241,203,136,.20),transparent 62%),
+                 linear-gradient(105deg,#211a15 34%,#2b211a 100%)}
+  .left{position:relative;z-index:2;padding:52px 0 44px 72px;display:flex;flex-direction:column}
+  .logo{width:106px;height:auto;margin-bottom:28px}
+  .eyebrow{font-size:14px;font-weight:700;letter-spacing:.17em;text-transform:uppercase;color:#f1cb88}
+  h1{font-size:66px;font-weight:800;line-height:.97;letter-spacing:-.055em;margin:16px 0 18px;max-width:9.5ch}
+  h1 em{font-style:normal;color:#f1cb88}
+  p{font-size:20px;line-height:1.45;color:#f0e1d0;max-width:31ch}
+  .cta{margin-top:26px;align-self:flex-start;background:#f1cb88;color:#211a15;font-size:21px;font-weight:800;
+       padding:15px 28px;border-radius:100px}
+  .photo{position:relative;z-index:1;height:630px;overflow:hidden}
+  .photo img{width:100%;height:100%;object-fit:cover;object-position:center 18%}
+  .photo::after{content:"";position:absolute;inset:0;pointer-events:none;
+        background:linear-gradient(90deg,#211a15 0%,rgba(33,26,21,.30) 28%,rgba(33,26,21,0) 52%)}
+</style></head>
+<body>
+  <div class="bg"></div>
+  <div class="left">
+    <img class="logo" src="header-logo.webp" alt="">
+    <span class="eyebrow">Beauty &amp; wellness e-commerce</span>
+    <h1>Launch your own <em>beauty brand.</em></h1>
+    <p>Hands-on guidance to build your logo, labels, website and first round of products.</p>
+    <span class="cta">Start your application &nearr;</span>
+  </div>
+  <div class="photo"><img src="founder.webp" alt=""></div>
+</body></html>
