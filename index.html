@@ -21,6 +21,23 @@
 <meta name="twitter:title" content="Skip to 7 Figures | Build Your E-commerce Brand">
 <meta name="twitter:description" content="Turn your product idea into a brand you can sell online. Hands-on guidance to build your logo, labels, website and first round of products.">
 <meta name="twitter:image" content="https://skip-to-7-figures.onrender.com/og.jpg">
+<link rel="canonical" href="https://skip-to-7-figures.onrender.com/">
+<meta property="og:url" content="https://skip-to-7-figures.onrender.com/">
+<link rel="alternate" type="application/json" href="/data.json">
+<link rel="preload" as="image" href="hero-poster.jpg" fetchpriority="high">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"Organization","@id":"https://skip-to-7-figures.onrender.com/#org","name":"Skip to 7 Figures LLC","url":"https://skip-to-7-figures.onrender.com/","logo":"https://skip-to-7-figures.onrender.com/header-logo.webp","image":"https://skip-to-7-figures.onrender.com/og.jpg","description":"Hands-on e-commerce brand building for beauty, personal care and wellness founders.","sameAs":["https://www.instagram.com/papichulo_dreaded/"]},
+{"@type":"WebSite","@id":"https://skip-to-7-figures.onrender.com/#site","url":"https://skip-to-7-figures.onrender.com/","name":"Skip to 7 Figures","publisher":{"@id":"https://skip-to-7-figures.onrender.com/#org"},"inLanguage":"en-US"},
+{"@type":"FAQPage","@id":"https://skip-to-7-figures.onrender.com/#faq","mainEntity":[
+{"@type":"Question","name":"Do I need business experience to start?","acceptedAnswer":{"@type":"Answer","text":"No. A lot of the brands we have helped started with no experience at all - getting the brand, the labels and the first round of products right is exactly what the first part of the work is for."}},
+{"@type":"Question","name":"What do I actually get?","acceptedAnswer":{"@type":"Answer","text":"Hands-on help shaping the brand and giving it a visual identity with a logo and product labels, putting your first round of products together, and building the storefront where they will sell."}},
+{"@type":"Question","name":"Is this a course or a franchise?","acceptedAnswer":{"@type":"Answer","text":"Neither. It is hands-on work with Keenan Williams on building your brand and getting your first products ready to sell."}},
+{"@type":"Question","name":"What if I am still just researching?","acceptedAnswer":{"@type":"Answer","text":"That is completely fine - pick that answer on the form. You will get the same reply either way and nothing is locked in by applying."}},
+{"@type":"Question","name":"Am I committing to anything by applying?","acceptedAnswer":{"@type":"Answer","text":"No. The questions are there so we can give you a useful reply, not to commit you to anything."}},
+{"@type":"Question","name":"Will I hear back?","acceptedAnswer":{"@type":"Answer","text":"We reply to every application with an honest answer about whether we are the right fit for what you are building."}}
+]}]}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="image" href="founder.webp" fetchpriority="high">
@@ -50,6 +67,10 @@ body{
   -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
   overflow-x:hidden;
 }
+.skip{position:absolute;left:-9999px;top:0;z-index:200;background:var(--gold);color:#1B1611;padding:14px 22px;border-radius:0 0 12px 0;font-weight:700;text-decoration:none}
+.skip:focus{left:0}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.noscript{background:#FCEBE7;border:1px solid #E6B7AC;color:#8A2E22;padding:16px 22px;border-radius:12px;margin:20px 0}
 img{display:block;max-width:100%}
 [hidden]{display:none!important}
 figure,figcaption{margin:0;padding:0}
@@ -179,6 +200,45 @@ h3{font-size:clamp(1.15rem,1.6vw,1.42rem);letter-spacing:-.015em}
   position:absolute;left:var(--pad);bottom:26px;display:flex;align-items:center;gap:12px;
   font:500 .66rem/1 var(--mono);letter-spacing:.22em;text-transform:uppercase;color:var(--muted-dk);opacity:.62;
 }
+
+/* trust strip */
+.trust{background:var(--cream-2);border-block:1px solid var(--line)}
+.trust__in{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,3vw,44px);padding-block:clamp(28px,4vw,46px)}
+.trust__item{text-align:center}
+.trust__item b{display:block;font-family:var(--serif);font-weight:600;font-size:clamp(1.5rem,3.4vw,2.5rem);line-height:1;letter-spacing:-.03em;color:var(--ink)}
+.trust__item span{display:block;margin-top:10px;font:600 .74rem/1.5 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.trust__note{grid-column:1/-1;text-align:center;font-size:.8rem;color:var(--muted);margin:0}
+
+/* faq */
+.faq{background:var(--cream)}
+.faq__list{display:grid;gap:10px;margin-top:clamp(28px,3.5vw,46px);max-width:900px}
+.faq details{border:1px solid var(--line);border-radius:14px;background:var(--paper);overflow:hidden;transition:border-color .25s var(--ease)}
+.faq details[open]{border-color:var(--line-gold)}
+.faq summary{cursor:pointer;list-style:none;padding:20px 56px 20px 22px;font-family:var(--serif);font-weight:600;font-size:clamp(1.02rem,1.5vw,1.18rem);letter-spacing:-.015em;position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";position:absolute;right:22px;top:50%;transform:translateY(-50%);font:400 1.5rem/1 var(--sans);color:var(--gold-dp)}
+.faq details[open] summary::after{content:"\2212"}
+.faq__a{padding:0 22px 22px;color:var(--muted);font-size:.98rem;max-width:68ch}
+
+/* what happens next */
+.next{background:var(--cream-2);border-top:1px solid var(--line)}
+.next__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,2.6vw,38px);margin-top:clamp(30px,3.6vw,52px)}
+.next__step{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:28px 26px}
+.next__step b{display:block;font:600 .78rem/1 var(--mono);letter-spacing:.16em;color:var(--gold-dp);margin-bottom:14px}
+.next__step h3{margin-bottom:10px}
+.next__step p{color:var(--muted);margin:0;font-size:.97rem}
+
+/* share + top buttons */
+.totop{position:fixed;right:18px;bottom:92px;z-index:55;width:44px;height:44px;border-radius:50%;border:1px solid var(--line-gold);background:rgba(248,245,239,.92);backdrop-filter:blur(10px);color:var(--ink);font-size:1.05rem;cursor:pointer;display:none;place-items:center;box-shadow:0 10px 26px -14px rgba(27,22,17,.5)}
+.totop.show{display:grid}
+.share{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line-gold);background:transparent;color:inherit;border-radius:100px;padding:11px 18px;font:600 .85rem/1 var(--sans);cursor:pointer;transition:background-color .25s var(--ease),color .25s var(--ease)}
+.share:hover{background:var(--gold);color:#1B1611}
+.foot__links{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.foot__links a{color:var(--muted-dk);font-size:.86rem;text-decoration:none;border-bottom:1px solid rgba(201,155,84,.35);padding-bottom:2px}
+.foot__links a:hover{color:var(--gold-lt)}
+.resume{background:#FDF6EA;border:1px solid var(--line-gold);border-radius:14px;padding:16px 18px;margin-bottom:20px;display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.resume p{margin:0;font-size:.94rem}
+.refnum{font:700 .86rem/1 var(--mono);color:var(--gold-dp);margin-top:10px}
 .hero__scroll i{display:block;width:44px;height:1px;background:currentColor;position:relative;overflow:hidden}
 .hero__scroll i::after{content:"";position:absolute;inset:0;background:var(--gold);animation:sweep 2.6s var(--ease) infinite}
 @keyframes sweep{0%{transform:translateX(-100%)}60%,100%{transform:translateX(100%)}}
@@ -386,6 +446,8 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
 </head>
 <body>
 
+<a class="skip" href="#apply">Skip to the application form</a>
+
 <header class="head" id="head">
   <div class="wrap head__in">
     <a class="brand" href="#top" aria-label="Skip to 7 Figures home"><img src="header-logo.webp" alt="Skip to 7 Figures LLC"></a>
@@ -395,6 +457,8 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
 </header>
 
 <main id="top">
+
+<noscript><div class="wrap"><div class="noscript"><strong>JavaScript is turned off.</strong> The application form on this page needs JavaScript to run. If you would rather not switch it on, email us directly at <a href="mailto:business@wolfpaqmarketing.com">business@wolfpaqmarketing.com</a> and we will pick it up from there.</div></div></noscript>
 
 <section class="hero" id="hero">
   <div class="wrap hero__grid">
@@ -427,6 +491,15 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
 <section class="spec">
   <div class="wrap spec__in">
     <span>Skincare</span><span>Hair growth</span><span>Health &amp; wellness</span><span>Feminine care</span>
+  </div>
+</section>
+
+<section class="trust" id="trust">
+  <div class="wrap trust__in">
+    <div class="trust__item"><b>$8/hr → $1M/day</b><span>Keenan's own before and after</span></div>
+    <div class="trust__item"><b>6, 7, 8 figures</b><span>Brands he has helped build</span></div>
+    <div class="trust__item"><b>Beauty &amp; wellness</b><span>Skincare, hair, feminine care</span></div>
+    <p class="trust__note">Individual results vary. Figures shown are the ones Keenan and his clients have shared.</p>
   </div>
 </section>
 
@@ -485,17 +558,50 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
       </div>
     </div>
     <div class="track" id="track" tabindex="0" aria-label="Client results. Scroll horizontally to see all seven images.">
-      <a class="tcard" href="testimonial-1.png" target="_blank" rel="noopener" aria-label="Open client result 1 at full size"><img src="testimonial-1.png" alt="Client-shared result 1, original photo or screenshot" loading="lazy" width="495" height="660"><span>View full image</span></a>
-      <a class="tcard" href="testimonial-2.png" target="_blank" rel="noopener" aria-label="Open client result 2 at full size"><img src="testimonial-2.png" alt="Client-shared result 2, original photo or screenshot" loading="lazy" width="1284" height="1018"><span>View full image</span></a>
-      <a class="tcard" href="testimonial-3.png" target="_blank" rel="noopener" aria-label="Open client result 3 at full size"><img src="testimonial-3.png" alt="Client-shared result 3, original photo or screenshot" loading="lazy" width="832" height="1800"><span>View full image</span></a>
-      <a class="tcard" href="testimonial-4.png" target="_blank" rel="noopener" aria-label="Open client result 4 at full size"><img src="testimonial-4.png" alt="Client-shared result 4, original photo or screenshot" loading="lazy" width="1290" height="1339"><span>View full image</span></a>
-      <a class="tcard" href="testimonial-5.png" target="_blank" rel="noopener" aria-label="Open client result 5 at full size"><img src="testimonial-5.png" alt="Client-shared result 5, original photo or screenshot" loading="lazy" width="1159" height="1041"><span>View full image</span></a>
-      <a class="tcard" href="testimonial-6.png" target="_blank" rel="noopener" aria-label="Open client result 6 at full size"><img src="testimonial-6.png" alt="Client-shared result 6, original photo or screenshot" loading="lazy" width="1536" height="1536"><span>View full image</span></a>
-      <a class="tcard" href="testimonial-7.png" target="_blank" rel="noopener" aria-label="Open client result 7 at full size"><img src="testimonial-7.png" alt="Client-shared result 7, original photo or screenshot" loading="lazy" width="1289" height="1297"><span>View full image</span></a>
+      <a class="tcard" href="testimonial-1.png" target="_blank" rel="noopener" aria-label="Open client result 1 at full size"><img src="testimonial-1.webp" alt="Client-shared result 1, original photo or screenshot" loading="lazy" width="495" height="660"><span>View full image</span></a>
+      <a class="tcard" href="testimonial-2.png" target="_blank" rel="noopener" aria-label="Open client result 2 at full size"><img src="testimonial-2.webp" alt="Client-shared result 2, original photo or screenshot" loading="lazy" width="1284" height="1018"><span>View full image</span></a>
+      <a class="tcard" href="testimonial-3.png" target="_blank" rel="noopener" aria-label="Open client result 3 at full size"><img src="testimonial-3.webp" alt="Client-shared result 3, original photo or screenshot" loading="lazy" width="832" height="1800"><span>View full image</span></a>
+      <a class="tcard" href="testimonial-4.png" target="_blank" rel="noopener" aria-label="Open client result 4 at full size"><img src="testimonial-4.webp" alt="Client-shared result 4, original photo or screenshot" loading="lazy" width="1290" height="1339"><span>View full image</span></a>
+      <a class="tcard" href="testimonial-5.png" target="_blank" rel="noopener" aria-label="Open client result 5 at full size"><img src="testimonial-5.webp" alt="Client-shared result 5, original photo or screenshot" loading="lazy" width="1159" height="1041"><span>View full image</span></a>
+      <a class="tcard" href="testimonial-6.png" target="_blank" rel="noopener" aria-label="Open client result 6 at full size"><img src="testimonial-6.webp" alt="Client-shared result 6, original photo or screenshot" loading="lazy" width="1536" height="1536"><span>View full image</span></a>
+      <a class="tcard" href="testimonial-7.png" target="_blank" rel="noopener" aria-label="Open client result 7 at full size"><img src="testimonial-7.webp" alt="Client-shared result 7, original photo or screenshot" loading="lazy" width="1289" height="1297"><span>View full image</span></a>
     </div>
     <p class="testi__hint">Swipe or scroll to explore · Tap an image to enlarge</p>
     <small style="display:block;margin-top:14px;color:var(--muted);font-size:.82rem">Client-reported results. Sales figures reflect the periods shown in each image. Individual results vary.</small>
     <p style="margin-top:34px"><a class="btn" href="#apply">Start your application ↗</a></p>
+  </div>
+</section>
+
+<section class="band faq" id="faq">
+  <div class="wrap">
+    <span class="eyebrow reveal">Before you apply</span>
+    <h2 class="reveal" data-d="1" style="margin-top:18px">Questions people ask first.</h2>
+    <div class="faq__list reveal" data-d="2">
+      <details>
+        <summary>Do I need business experience to start?</summary>
+        <div class="faq__a">No. A lot of the brands we have helped started with no experience at all. Getting the brand, the labels and the first round of products right is exactly what the first part of the work is for.</div>
+      </details>
+      <details>
+        <summary>What do I actually get?</summary>
+        <div class="faq__a">Hands-on help shaping the brand and giving it a visual identity with a logo and product labels, putting your first round of products together, and building the storefront where they will sell.</div>
+      </details>
+      <details>
+        <summary>Is this a course or a franchise?</summary>
+        <div class="faq__a">Neither. It is hands-on work with Keenan Williams on building your brand and getting your first products ready to sell.</div>
+      </details>
+      <details>
+        <summary>What if I am still just researching?</summary>
+        <div class="faq__a">That is completely fine — pick that answer on the form. You will get the same reply either way, and nothing is locked in by applying.</div>
+      </details>
+      <details>
+        <summary>Am I committing to anything by applying?</summary>
+        <div class="faq__a">No. The questions are there so we can give you a useful reply, not to commit you to anything.</div>
+      </details>
+      <details>
+        <summary>Will I hear back?</summary>
+        <div class="faq__a">We reply to every application with an honest answer about whether we are the right fit for what you are building.</div>
+      </details>
+    </div>
   </div>
 </section>
 
@@ -522,6 +628,11 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
           <span class="rail" id="rail" aria-hidden="true"></span>
         </div>
         <progress id="progress" max="6" value="1" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap" aria-label="Application progress"></progress>
+        <div class="resume" id="resumeBar" hidden>
+          <p><strong>Pick up where you left off.</strong> We saved your answers on this device.</p>
+          <button class="btn sm gold" id="resumeYes" type="button">Continue</button>
+          <button class="btn sm ghost" id="resumeNo" type="button">Start over</button>
+        </div>
         <div id="fields"></div>
         <div class="actions">
           <button class="btn btn--ghost" type="button" id="back" hidden>Back</button>
@@ -533,8 +644,21 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
       <div id="done" class="done" hidden>
         <h3 tabindex="-1">Application received</h3>
         <p>Thanks for reaching out — we’ll be in touch shortly.</p>
+        <p class="refnum" id="refnum" hidden></p>
         <button id="reset" class="btn btn--ghost" type="button">Try again</button>
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="band next" id="next">
+  <div class="wrap">
+    <span class="eyebrow reveal">What happens next</span>
+    <h2 class="reveal" data-d="1" style="margin-top:18px">After you hit send.</h2>
+    <div class="next__grid">
+      <article class="next__step reveal" data-d="1"><b>01</b><h3>A person reads it</h3><p>Every application is read by a person on the team, not filtered by a form.</p></article>
+      <article class="next__step reveal" data-d="2"><b>02</b><h3>An honest answer</h3><p>If we are the right fit for what you are building, we will say so. If we are not, we will tell you that too.</p></article>
+      <article class="next__step reveal" data-d="3"><b>03</b><h3>Your brand comes first</h3><p>Logo, labels, first round of products, then the storefront where they sell.</p></article>
     </div>
   </div>
 </section>
@@ -545,15 +669,42 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
   <div class="wrap foot__in">
     <img src="header-logo.webp" alt="Skip to 7 Figures LLC">
     <small>Skip to 7 Figures LLC</small>
-    <a href="https://www.instagram.com/papichulo_dreaded/" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+    <div class="foot__links">
+      <button class="share" id="shareBtn" type="button">Share this page ↗</button>
+      <a href="https://www.instagram.com/papichulo_dreaded/" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+      <a href="mailto:business@wolfpaqmarketing.com">Contact</a>
+    </div>
   </div>
 </footer>
+
+<button class="totop" id="toTop" type="button" aria-label="Back to top">↑</button>
 
 <div class="mobile-apply"><a class="btn" href="#apply">Start your application ↗</a></div>
 
 <script>
 document.documentElement.classList.add('js');
 const API='https://skip-to-7-figures-admin.skip7figures.workers.dev';
+
+/* ---------- visitor id, UTM capture, funnel tracking ---------- */
+const UID=(function(){try{let v=localStorage.getItem('sf7_vid');if(!v){v='v'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);localStorage.setItem('sf7_vid',v);}return v;}catch(e){return 'v'+Math.random().toString(36).slice(2,10);}})();
+const UTM=(function(){
+  try{
+    const q=new URLSearchParams(location.search), o={};
+    ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','gclid','fbclid'].forEach(k=>{const v=q.get(k);if(v)o[k]=v;});
+    if(Object.keys(o).length){localStorage.setItem('sf7_utm',JSON.stringify(o));return o;}
+    const s=localStorage.getItem('sf7_utm');return s?JSON.parse(s):{};
+  }catch(e){return {};}
+})();
+function trackEvent(name,data){
+  try{
+    const u=new URL(API+'/api/track');
+    u.searchParams.set('path',location.pathname||'/');
+    const body=JSON.stringify({name:name,visitor_id:UID,data:data||{}});
+    if(navigator.sendBeacon) navigator.sendBeacon(u.toString(),new Blob([body],{type:'text/plain;charset=UTF-8'}));
+  }catch(e){}
+}
 const questions=[
 ['capital','How much capital are you prepared to allocate?',['$5,000–$9,999','$10,000–$24,999','$25,000–$49,999','$50,000–$99,999','$100,000–$250,000','$250,000+']],
 ['timeline','When are you looking to get started?',['Immediately','Within 30 days','Within 1–3 months','Just researching']],
@@ -602,20 +753,28 @@ form.addEventListener('submit',async event=>{
   if(index<questions.length){index++;render(true);return}
   sending=true; next.disabled=true; next.textContent='Sending…';
   const errEl=document.querySelector('#formError');
+  const emailVal=(form.elements.email?form.elements.email.value:'').trim();
+  const phoneVal=(form.elements.phone?form.elements.phone.value:'').trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(emailVal)){ errEl.hidden=false; errEl.textContent='Please enter a valid email address so we can reply.'; sending=false; next.disabled=false; next.textContent='Send application'; return; }
+  if(phoneVal.replace(/\D/g,'').length<7){ errEl.hidden=false; errEl.textContent='Please enter a phone number we can reach you on.'; sending=false; next.disabled=false; next.textContent='Send application'; return; }
   const payload={
     name:(answers.name||'').trim(),
-    email:(form.elements.email?form.elements.email.value:'').trim(),
-    phone:(form.elements.phone?form.elements.phone.value:'').trim(),
+    email:emailVal,
+    phone:phoneVal,
     company:form.elements.company?form.elements.company.value:'',
     capital:answers.capital,timeline:answers.timeline,experience:answers.experience,
     interest:answers.interest,decision:answers.decision,
-    source:'funnel',page_url:location.href
+    source:'funnel',page_url:location.href,
+    visitor_id:UID, ...UTM
   };
   try{
     const res=await fetch(API+'/api/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     const data=await res.json().catch(()=>({}));
     if(!res.ok||!data.ok) throw new Error(data.error||('request failed ('+res.status+')'));
     errEl.hidden=true;
+    try{ localStorage.removeItem('sf7_draft'); }catch(e){}
+    const ref=document.querySelector('#refnum');
+    if(ref && data.id){ ref.hidden=false; ref.textContent='Your reference: #'+data.id; }
     answers={};fields.replaceChildren();form.hidden=true;done.hidden=false;done.querySelector('h3').focus();
   }catch(err){
     errEl.hidden=false;
@@ -626,6 +785,9 @@ form.addEventListener('submit',async event=>{
 back.addEventListener('click',()=>{remember();index--;render(true)});
 document.querySelector('#reset').addEventListener('click',()=>{index=0;form.hidden=false;done.hidden=true;render(true)});
 render();
+/* fire the apply_start event the first time the form is actually used */
+let started=false;
+form.addEventListener('focusin',()=>{ if(started) return; started=true; trackEvent('apply_start',{}); },{once:true});
 
 /* editable site copy + page-view tracking (admin dashboard) */
 (async()=>{
@@ -781,6 +943,52 @@ tnext.addEventListener('click',()=>step(1));
 track.addEventListener('scroll',()=>{clearTimeout(window.__tc);window.__tc=setTimeout(updateCount,120)},{passive:true});
 window.addEventListener('resize',updateCount);
 updateCount();
+</script>
+<script>
+/* ---------- resume a saved application, share, back to top ---------- */
+(function(){
+  const bar=document.getElementById('resumeBar');
+  if(bar){
+    let draft=null;
+    try{ draft=JSON.parse(localStorage.getItem('sf7_draft')||'null'); }catch(e){}
+    if(draft&&draft.answers&&Object.keys(draft.answers).length){
+      bar.hidden=false;
+      document.getElementById('resumeYes').addEventListener('click',()=>{
+        try{ Object.assign(answers,draft.answers); }catch(e){}
+        bar.hidden=true;
+        try{ render(true); }catch(e){}
+      });
+      document.getElementById('resumeNo').addEventListener('click',()=>{
+        try{ localStorage.removeItem('sf7_draft'); }catch(e){}
+        bar.hidden=true;
+      });
+    }
+    setInterval(()=>{
+      try{
+        if(typeof answers!=='undefined'&&Object.keys(answers).length) localStorage.setItem('sf7_draft',JSON.stringify({answers:answers,at:Date.now()}));
+      }catch(e){}
+    },1500);
+  }
+  const top=document.getElementById('toTop');
+  if(top){
+    const onScroll=()=>{ top.classList.toggle('show',window.scrollY>700); };
+    window.addEventListener('scroll',onScroll,{passive:true});
+    onScroll();
+    top.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+  }
+  const share=document.getElementById('shareBtn');
+  if(share){
+    share.addEventListener('click',async()=>{
+      const data={title:document.title,text:'Build your own beauty brand - Skip to 7 Figures',url:location.href};
+      try{
+        if(navigator.share){ await navigator.share(data); return; }
+        await navigator.clipboard.writeText(location.href);
+        share.textContent='Link copied';
+        setTimeout(()=>{share.textContent='Share this page ↗';},2200);
+      }catch(e){}
+    });
+  }
+})();
 </script>
 </body>
 </html>
