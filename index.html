@@ -298,6 +298,7 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
 .done{text-align:center;padding:24px 0}
 .done h3{font-size:clamp(1.4rem,2.4vw,2rem);margin-bottom:10px}
 .done p{color:var(--muted);margin:0 0 24px}
+.hp{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
 /* ---------- footer ---------- */
 .foot{background:#16120E;color:var(--muted-dk);padding-block:44px;border-top:1px solid var(--line-gold-dk)}
@@ -515,6 +516,7 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
 
     <div class="formcard reveal" data-d="1">
       <form id="application" novalidate>
+        <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
         <div class="formcard__top">
           <span class="formcard__step" id="step" aria-live="polite">Step 1 of 6</span>
           <span class="rail" id="rail" aria-hidden="true"></span>
@@ -525,11 +527,12 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
           <button class="btn btn--ghost" type="button" id="back" hidden>Back</button>
           <button class="btn" id="next" type="submit">Continue</button>
         </div>
-        <p class="note">Preview mode. Answers are used to demo the application flow and are not sent.</p>
+        <p class="note" id="formError" hidden style="background:#FCEBE7;border:1px solid #E6B7AC;color:#8A2E22;padding:11px 13px;border-radius:10px"></p>
+        <p class="note">Your details are only used to reply about your application.</p>
       </form>
       <div id="done" class="done" hidden>
-        <h3 tabindex="-1">Application preview complete</h3>
-        <p>You’ve reached the end of the application.</p>
+        <h3 tabindex="-1">Application received</h3>
+        <p>Thanks for reaching out — we’ll be in touch shortly.</p>
         <button id="reset" class="btn btn--ghost" type="button">Try again</button>
       </div>
     </div>
@@ -550,6 +553,7 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
 
 <script>
 document.documentElement.classList.add('js');
+const API='https://skip-to-7-figures-admin.skip7figures.workers.dev';
 const questions=[
 ['capital','How much capital are you prepared to allocate?',['$5,000–$9,999','$10,000–$24,999','$25,000–$49,999','$50,000–$99,999','$100,000–$250,000','$250,000+']],
 ['timeline','When are you looking to get started?',['Immediately','Within 30 days','Within 1–3 months','Just researching']],
@@ -576,7 +580,7 @@ function render(focus=false){
   prog.value=index+1;
   renderRail();
   back.hidden=index===0;
-  next.textContent=index===questions.length?'Finish preview':'Continue';
+  next.textContent=index===questions.length?'Send application':'Continue';
   if(index===questions.length){
     fields.innerHTML='<fieldset><legend tabindex="-1">How can we reach you?</legend><label class="field"><span>Email</span><input type="email" name="email" autocomplete="email" required></label><label class="field"><span>Phone number</span><input type="tel" name="phone" autocomplete="tel" inputmode="tel" required></label></fieldset>';
     for(const key of ['email','phone']) form.elements[key].value=answers[key]||'';
@@ -590,14 +594,66 @@ function render(focus=false){
   }
 }
 function remember(){Object.assign(answers,Object.fromEntries(new FormData(form)))}
-form.addEventListener('submit',event=>{
-  event.preventDefault();remember();
+let sending=false;
+form.addEventListener('submit',async event=>{
+  event.preventDefault();
+  if(sending) return;
+  remember();
   if(index<questions.length){index++;render(true);return}
-  answers={};fields.replaceChildren();form.hidden=true;done.hidden=false;done.querySelector('h3').focus();
+  sending=true; next.disabled=true; next.textContent='Sending…';
+  const errEl=document.querySelector('#formError');
+  const payload={
+    name:(answers.name||'').trim(),
+    email:(form.elements.email?form.elements.email.value:'').trim(),
+    phone:(form.elements.phone?form.elements.phone.value:'').trim(),
+    company:form.elements.company?form.elements.company.value:'',
+    capital:answers.capital,timeline:answers.timeline,experience:answers.experience,
+    interest:answers.interest,decision:answers.decision,
+    source:'funnel',page_url:location.href
+  };
+  try{
+    const res=await fetch(API+'/api/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok||!data.ok) throw new Error(data.error||('request failed ('+res.status+')'));
+    errEl.hidden=true;
+    answers={};fields.replaceChildren();form.hidden=true;done.hidden=false;done.querySelector('h3').focus();
+  }catch(err){
+    errEl.hidden=false;
+    errEl.textContent='We couldn’t send your application — '+(err&&err.message?err.message:'network error')+'. Please try again.';
+    sending=false; next.disabled=false; next.textContent='Send application';
+  }
 });
 back.addEventListener('click',()=>{remember();index--;render(true)});
 document.querySelector('#reset').addEventListener('click',()=>{index=0;form.hidden=false;done.hidden=true;render(true)});
 render();
+
+/* editable site copy + page-view tracking (admin dashboard) */
+(async()=>{
+  try{
+    const c=await (await fetch(API+'/api/content')).json();
+    if(c&&c.headline){
+      const h1=document.querySelector('.hero h1');
+      if(h1){
+        const i=c.headline.toLowerCase().indexOf('beauty brand');
+        if(i>-1) h1.innerHTML=c.headline.slice(0,i)+'<em>'+c.headline.slice(i)+'</em>';
+        else h1.textContent=c.headline;
+      }
+    }
+    if(c&&c.subheadline){const el=document.querySelector('.hero .lede');if(el)el.textContent=c.subheadline;}
+    if(c&&c.cta_label){document.querySelectorAll('a.btn').forEach(a=>{if(/application/i.test(a.textContent))a.textContent=c.cta_label;});}
+    if(c&&c.specialties){
+      const parts=c.specialties.split(',').map(s=>s.trim()).filter(Boolean);
+      const spans=document.querySelectorAll('.spec span');
+      parts.forEach((p,i)=>{if(spans[i])spans[i].textContent=p;});
+    }
+  }catch(e){}
+  try{
+    if(!sessionStorage.getItem('sf7_seen')){
+      sessionStorage.setItem('sf7_seen','1');
+      navigator.sendBeacon(API+'/api/track',new Blob([JSON.stringify({path:'/'})],{type:'application/json'}));
+    }
+  }catch(e){}
+})();
 
 /* mobile sticky CTA */
 const mobileApply=document.querySelector('.mobile-apply');
