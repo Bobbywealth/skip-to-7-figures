@@ -145,15 +145,25 @@ h3{font-size:clamp(1.15rem,1.6vw,1.42rem);letter-spacing:-.015em}
   -webkit-background-clip:text;background-clip:text;color:transparent}
 .hero__cta{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-top:36px}
 .hero__sub{font-size:.82rem;color:var(--muted-dk);letter-spacing:.02em}
-.hero__frame{position:relative;justify-self:end;width:100%;max-width:420px}
-.hero__frame::before{
-  content:"";position:absolute;inset:-14px;border:1px solid var(--line-gold-dk);border-radius:26px;
+.hero__frame{
+  position:relative;justify-self:end;width:fit-content;max-width:100%;
 }
-.hero__photo{
-  position:relative;width:100%;aspect-ratio:4/5;max-height:min(66vh,560px);object-fit:cover;object-position:center 14%;
-  border-radius:22px;border:1px solid var(--line-gold-dk);
+.hero__media{
+  position:relative;width:auto;height:min(70vh,620px);aspect-ratio:9/16;max-width:100%;
+  border-radius:22px;border:1px solid var(--line-gold-dk);overflow:hidden;
   box-shadow:0 44px 90px -44px rgba(0,0,0,.85);
 }
+.hero__photo{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 12%;
+  display:block;background:#141110;
+}
+.hero__sound{
+  position:absolute;z-index:4;top:14px;right:14px;width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--line-gold-dk);background:rgba(20,16,12,.62);color:var(--gold-lt);
+  display:grid;place-items:center;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  font-size:.9rem;transition:background-color .25s var(--ease),color .25s var(--ease),transform .25s var(--ease);
+}
+.hero__sound:hover{background:var(--gold);color:#1B1611;transform:scale(1.06)}
 .hero__caption{
   display:flex;align-items:center;gap:10px;margin-top:18px;
   font:500 .74rem/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted-dk);
@@ -323,8 +333,9 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
   .hero h1{margin-top:18px;font-size:clamp(2.6rem,10.8vw,3rem);letter-spacing:-.045em;max-width:none}
   .hero__cta{gap:16px;margin-top:28px}
   .hero__cta .btn{width:100%;justify-content:center}
-  .hero__frame{max-width:100%}
-  .hero__photo{aspect-ratio:5/4;max-height:none;object-position:center 12%}
+  .hero__frame{width:100%;max-width:100%}
+  .hero__media{height:auto;width:100%;aspect-ratio:4/5}
+  .hero__photo{object-position:center 8%}
   .hero__caption{margin-top:14px}
   .apply__list{display:none}
   .apply__aside{margin-bottom:-4px}
@@ -390,7 +401,12 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
       </div>
     </div>
     <figure class="hero__frame reveal in" data-d="1">
-      <img class="hero__photo" src="founder.webp" alt="Founder of Skip to 7 Figures at an e-commerce event" width="444" height="819" fetchpriority="high">
+      <div class="hero__media">
+        <video class="hero__photo" id="herovideo" autoplay muted loop playsinline preload="auto" poster="hero-poster.jpg" width="720" height="1280" aria-label="Keenan Williams speaking to camera about building an e-commerce brand">
+          <source src="hero.mp4" type="video/mp4">
+        </video>
+        <button class="hero__sound" id="soundToggle" type="button" aria-label="Unmute video" aria-pressed="false">♪</button>
+      </div>
       <figcaption class="hero__caption">Founder of Skip to 7 Figures</figcaption>
     </figure>
   </div>
@@ -591,6 +607,30 @@ function updateMobileApply(){
 window.addEventListener('scroll',updateMobileApply,{passive:true});
 window.addEventListener('resize',updateMobileApply);
 updateMobileApply();
+
+/* hero video: autoplay + sound toggle */
+const heroVideo=document.getElementById('herovideo');
+const soundToggle=document.getElementById('soundToggle');
+if(heroVideo){
+  const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduceMotion){
+    heroVideo.removeAttribute('autoplay');
+    heroVideo.pause();
+  }else{
+    heroVideo.play().catch(()=>{});
+  }
+  heroVideo.addEventListener('canplay',()=>{if(!reduceMotion) heroVideo.play().catch(()=>{})});
+  if(soundToggle){
+    soundToggle.addEventListener('click',()=>{
+      heroVideo.muted=!heroVideo.muted;
+      const on=!heroVideo.muted;
+      soundToggle.textContent=on?'🔊':'♪';
+      soundToggle.setAttribute('aria-pressed',String(on));
+      soundToggle.setAttribute('aria-label',on?'Mute video':'Unmute video');
+      if(on) heroVideo.play().catch(()=>{});
+    });
+  }
+}
 
 /* header state */
 const head=document.querySelector('#head');
