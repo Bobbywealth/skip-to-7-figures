@@ -62,7 +62,7 @@ function trackEvent(name,data){
   }catch(e){}
 }
 const questions=[
-['capital','How much capital are you prepared to allocate?',['$5,000–$9,999','$10,000–$24,999','$25,000–$49,999','$50,000–$99,999','$100,000–$250,000','$250,000+']],
+['capital','How much capital are you prepared to allocate?',['Under $5,000 / Not sure yet','$5,000–$9,999','$10,000–$24,999','$25,000–$49,999','$50,000–$99,999','$100,000–$250,000','$250,000+']],
 ['timeline','When are you looking to get started?',['Immediately','Within 30 days','Within 1–3 months','Just researching']],
 ['experience','What is your current experience?',['Complete beginner','Already operating a business','Experienced entrepreneur / investor']],
 ['interest','What are you most interested in?',['Launching an e-commerce brand','Scaling an existing brand','Done-for-you business services','Exploring a business partnership']],
@@ -77,20 +77,27 @@ const form=document.querySelector('#application'),
       prog=document.querySelector('#progress'),
       rail=document.querySelector('#rail');
 let index=0, answers={};
-const TOTAL=questions.length+1;
+const TOTAL=questions.length+2;
 
 function renderRail(){
   rail.innerHTML=Array.from({length:TOTAL},(_,i)=>'<i class="'+(i<=index?'on':'')+'"></i>').join('');
 }
 function render(focus=false){
   stepEl.textContent='Step '+(index+1)+' of '+TOTAL;
+  prog.max=TOTAL;
   prog.value=index+1;
   renderRail();
   back.hidden=index===0;
-  next.textContent=index===questions.length?'Send application':'Continue';
+  next.textContent=index===questions.length+1?'Send application':'Continue';
   if(index===questions.length){
-    fields.innerHTML='<fieldset><legend tabindex="-1">How can we reach you?</legend><label class="field"><span>Your name</span><input type="text" name="name" autocomplete="name" placeholder="First and last name" required></label><label class="field"><span>Email</span><input type="email" name="email" autocomplete="email" required></label><label class="field"><span>Phone number</span><input type="tel" name="phone" autocomplete="tel" inputmode="tel" required></label></fieldset><div id="cf-turnstile" style="margin-top:18px;min-height:0"></div>';
-    for(const key of ['name','email','phone']) form.elements[key].value=answers[key]||'';
+    /* contact step, part 1 of 2: name + email come first */
+    destroyTurnstile();
+    fields.innerHTML='<fieldset><legend tabindex="-1">How can we reach you?</legend><label class="field"><span>Your name</span><input type="text" name="name" autocomplete="name" placeholder="First and last name" required></label><label class="field"><span>Email</span><input type="email" name="email" autocomplete="email" required></label></fieldset>';
+    for(const key of ['name','email']) form.elements[key].value=answers[key]||'';
+  }else if(index===questions.length+1){
+    /* contact step, part 2 of 2: phone, then the application is sent */
+    fields.innerHTML='<fieldset><legend tabindex="-1">One last detail</legend><label class="field"><span>Phone number</span><input type="tel" name="phone" autocomplete="tel" inputmode="tel" required></label></fieldset><div id="cf-turnstile" style="margin-top:18px;min-height:0"></div>';
+    form.elements.phone.value=answers.phone||'';
     if(tsReady) mountTurnstile();
   }else{
     /* leaving the contact step destroys the host div - take the widget with it */
@@ -118,11 +125,24 @@ form.addEventListener('submit',async event=>{
     }
     index++;render(true);return;
   }
+  if(index===questions.length){
+    /* contact part 1: check name + email, then move on to the phone step.
+       Nothing is sent here - /api/apply requires a valid phone number
+       (verified live: it rejects phoneless submissions), so the one and
+       only submit happens from the final step below. */
+    const errEl=document.querySelector('#formError');
+    const nameVal=(form.elements.name?form.elements.name.value:'').trim();
+    if(nameVal.length<2){ errEl.hidden=false; errEl.textContent='Please tell us your name so we know who we are replying to.'; return; }
+    const emailVal=(form.elements.email?form.elements.email.value:'').trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(emailVal)){ errEl.hidden=false; errEl.textContent='Please enter a valid email address so we can reply.'; return; }
+    errEl.hidden=true;
+    index++;render(true);return;
+  }
   sending=true; next.disabled=true; next.textContent='Sending…';
   const errEl=document.querySelector('#formError');
-  const nameVal=(form.elements.name?form.elements.name.value:'').trim();
+  const nameVal=(answers.name||'').trim();
   if(nameVal.length<2){ errEl.hidden=false; errEl.textContent='Please tell us your name so we know who we are replying to.'; sending=false; next.disabled=false; next.textContent='Send application'; return; }
-  const emailVal=(form.elements.email?form.elements.email.value:'').trim();
+  const emailVal=(answers.email||'').trim();
   const phoneVal=(form.elements.phone?form.elements.phone.value:'').trim();
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(emailVal)){ errEl.hidden=false; errEl.textContent='Please enter a valid email address so we can reply.'; sending=false; next.disabled=false; next.textContent='Send application'; return; }
   if(phoneVal.replace(/\D/g,'').length<7){ errEl.hidden=false; errEl.textContent='Please enter a phone number we can reach you on.'; sending=false; next.disabled=false; next.textContent='Send application'; return; }
@@ -392,7 +412,7 @@ updateCount();
         try{ Object.assign(answers,draft.answers); }catch(e){}
         bar.hidden=true;
         try{
-          if(typeof draft.index==='number'){ index=Math.min(draft.index,questions.length); }
+          if(typeof draft.index==='number'){ index=Math.min(draft.index,questions.length+1); }
           render(true);
         }catch(e){}
       });
