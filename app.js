@@ -23,6 +23,14 @@ function mountTurnstile(){
     });
   }catch(e){ tsToken=''; }
 }
+function resetTurnstile(){
+  tsToken='';
+  if(window.turnstile && tsWidget!==null){ try{ window.turnstile.reset(tsWidget); }catch(e){} }
+}
+function destroyTurnstile(){
+  tsToken='';
+  if(window.turnstile && tsWidget!==null){ try{ window.turnstile.remove(tsWidget); }catch(e){} tsWidget=null; }
+}
 function waitForTurnstile(ms){
   const started=Date.now();
   return new Promise(resolve=>{
@@ -85,6 +93,8 @@ function render(focus=false){
     for(const key of ['email','phone']) form.elements[key].value=answers[key]||'';
     if(tsReady) mountTurnstile();
   }else{
+    /* leaving the contact step destroys the host div - take the widget with it */
+    destroyTurnstile();
     const [key,title,options]=questions[index];
     fields.innerHTML='<fieldset><legend tabindex="-1">'+title+'</legend>'+options.map(option=>'<label class="option"><input type="radio" required name="'+key+'" value="'+option+'" '+(answers[key]===option?'checked':'')+'>'+option+'</label>').join('')+'</fieldset>';
   }
@@ -133,22 +143,34 @@ form.addEventListener('submit',async event=>{
     if(!res.ok||!data.ok) throw new Error(data.error||('request failed ('+res.status+')'));
     errEl.hidden=true;
     try{ localStorage.removeItem('sf7_draft'); }catch(e){}
+    resetTurnstile();
     const ref=document.querySelector('#refnum');
     if(ref && data.id){ ref.hidden=false; ref.textContent='Your reference: #'+data.id; }
     const del=document.querySelector('#deletelink');
     if(del && data.delete_token){
       del.hidden=false;
-      del.querySelector('a').href='/delete.html?email='+encodeURIComponent(payload.email)+'&token='+encodeURIComponent(data.delete_token);
+      del.querySelector('a').href='/delete.html#email='+encodeURIComponent(payload.email)+'&token='+encodeURIComponent(data.delete_token);
     }
     answers={};fields.replaceChildren();form.hidden=true;done.hidden=false;done.querySelector('h3').focus();
   }catch(err){
     errEl.hidden=false;
     errEl.textContent='We couldn’t send your application — '+(err&&err.message?err.message:'network error')+'. Please try again.';
+    /* the token may have been spent or expired - get a fresh one for the retry */
+    resetTurnstile();
     sending=false; next.disabled=false; next.textContent='Send application';
   }
 });
 back.addEventListener('click',()=>{remember();index--;render(true)});
-document.querySelector('#reset').addEventListener('click',()=>{index=0;form.hidden=false;done.hidden=true;render(true)});
+document.querySelector('#reset').addEventListener('click',()=>{
+  index=0;
+  sending=false;
+  next.disabled=false;
+  next.textContent='Continue';
+  form.hidden=false;
+  done.hidden=true;
+  resetTurnstile();
+  render(true);
+});
 render();
 /* fire the apply_start event the first time the form is actually used */
 let started=false;
@@ -322,7 +344,10 @@ updateCount();
       document.getElementById('resumeYes').addEventListener('click',()=>{
         try{ Object.assign(answers,draft.answers); }catch(e){}
         bar.hidden=true;
-        try{ render(true); }catch(e){}
+        try{
+          if(typeof draft.index==='number'){ index=Math.min(draft.index,questions.length); }
+          render(true);
+        }catch(e){}
       });
       document.getElementById('resumeNo').addEventListener('click',()=>{
         try{ localStorage.removeItem('sf7_draft'); }catch(e){}
@@ -331,7 +356,7 @@ updateCount();
     }
     setInterval(()=>{
       try{
-        if(typeof answers!=='undefined'&&Object.keys(answers).length) localStorage.setItem('sf7_draft',JSON.stringify({answers:answers,at:Date.now()}));
+        if(typeof answers!=='undefined'&&Object.keys(answers).length) localStorage.setItem('sf7_draft',JSON.stringify({answers:answers,index:(typeof index!=='undefined'?index:0),at:Date.now()}));
       }catch(e){}
     },1500);
   }

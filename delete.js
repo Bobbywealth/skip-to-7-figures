@@ -1,5 +1,6 @@
 const API='https://skip-to-7-figures-admin.skip7figures.workers.dev';
-const q=new URLSearchParams(location.search);
+/* the delete code travels in the URL fragment so it never reaches the server logs */
+const q=new URLSearchParams(location.hash.replace(/^#/,''));
 if(q.get('email')) document.getElementById('email').value=q.get('email');
 if(q.get('token')) document.getElementById('token').value=q.get('token');
 const msg=document.getElementById('msg'), btn=document.getElementById('delBtn');
