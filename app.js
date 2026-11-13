@@ -154,7 +154,7 @@ form.addEventListener('submit',async event=>{
     answers={};fields.replaceChildren();form.hidden=true;done.hidden=false;done.querySelector('h3').focus();
   }catch(err){
     errEl.hidden=false;
-    errEl.textContent='We couldn’t send your application — '+(err&&err.message?err.message:'network error')+'. Please try again.';
+    errEl.textContent='We couldn’t send your application — '+(err&&err.message?err.message:'network error')+'. Please try again, or email us at business@wolfpaqmarketing.com.';
     /* the token may have been spent or expired - get a fresh one for the retry */
     resetTurnstile();
     sending=false; next.disabled=false; next.textContent='Send application';
@@ -190,6 +190,10 @@ form.addEventListener('focusin',()=>{ if(started) return; started=true; trackEve
     }
     if(c&&c.subheadline){const el=document.querySelector('.hero .lede');if(el)el.textContent=c.subheadline;}
     if(c&&c.cta_label){document.querySelectorAll('a.btn').forEach(a=>{if(/application/i.test(a.textContent))a.textContent=c.cta_label;});}
+    if(c&&c.cost_answer){
+      const el=document.querySelector('[data-content="cost_answer"]');
+      if(el) el.textContent=c.cost_answer;
+    }
     if(c&&c.specialties){
       const parts=c.specialties.split(',').map(s=>s.trim()).filter(Boolean);
       const spans=document.querySelectorAll('.spec span');
@@ -228,6 +232,26 @@ updateMobileApply();
    Browsers block audible autoplay on a fresh landing (Chrome pauses the element and
    play() rejects with NotAllowedError), so the video starts muted and the audio is
    armed the moment the visitor clicks, taps, presses a key or scrolls. */
+/* the hero video is 6.7MB - the poster is the LCP, so the video is only
+   fetched once the page has painted. A visitor on a slow connection or with
+   reduced motion keeps the poster and never downloads it. */
+(function lazyHeroVideo(){
+  const v=document.getElementById('herovideo');
+  if(!v) return;
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const conn=navigator.connection||{};
+  if(reduce||conn.saveData||/2g/.test(String(conn.effectiveType||''))) return;
+  const load=()=>{
+    if(!v.querySelector('source[data-src]')) return;
+    v.querySelectorAll('source[data-src]').forEach(s=>{s.src=s.dataset.src;s.removeAttribute('data-src');});
+    v.load();
+    const p=v.play();
+    if(p&&p.catch) p.catch(()=>{});
+  };
+  if('requestIdleCallback' in window) requestIdleCallback(load,{timeout:2500});
+  else setTimeout(load,1500);
+})();
+
 const heroVideo=document.getElementById('herovideo');
 const soundToggle=document.getElementById('soundToggle');
 let soundWanted=true, audioArmed=false, fadeTimer=null;
