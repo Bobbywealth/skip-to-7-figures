@@ -85,6 +85,30 @@ for (const f of STATIC_FILES.filter((x) => x.endsWith('.js'))) {
   }
 }
 
+// ---- every #id the shipped scripts reach for must exist on the page ---------
+// A missing id throws inside the script, which aborts it BEFORE the reveal
+// observer is registered - every .reveal element then stays at opacity 0 and
+// the visitor gets a blank page while the build still says OK.
+for (const [page, script] of [['index.html', 'app.js'], ['delete.html', 'delete.js']]) {
+  const html = fs.readFileSync(path.join(DIST, page), 'utf8');
+  const js = fs.readFileSync(path.join(DIST, script), 'utf8');
+  const ids = new Set();
+  for (const m of js.matchAll(/querySelector\(\s*['"`]#([A-Za-z0-9_-]+)['"`]\s*\)/g)) ids.add(m[1]);
+  for (const m of js.matchAll(/getElementById\(\s*['"`]([A-Za-z0-9_-]+)['"`]\s*\)/g)) ids.add(m[1]);
+  for (const id of ids) {
+    // an id the script CREATES at runtime (it appears as id="x" in the script
+    // itself) is not expected to be in the static markup
+    const createdByTheScript = new RegExp('id=["\']' + id + '["\']').test(js);
+    if (createdByTheScript) continue;
+    if (!new RegExp('id=["\']' + id + '["\']').test(html)) {
+      problems.push(script + ' looks for #' + id + ', but ' + page + ' has no element with that id - the script would throw and the page would render blank');
+    }
+  }
+  if (!new RegExp('<script[^>]+src=["\']' + script + '["\']').test(html)) {
+    problems.push(page + ' does not load ' + script + ' - its behaviour would never run');
+  }
+}
+
 // ---- every page needs a viewport, a title and a lang -------------------------
 for (const page of PAGES) {
   const html = fs.readFileSync(path.join(DIST, page), 'utf8');

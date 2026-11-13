@@ -89,8 +89,8 @@ function render(focus=false){
   back.hidden=index===0;
   next.textContent=index===questions.length?'Send application':'Continue';
   if(index===questions.length){
-    fields.innerHTML='<fieldset><legend tabindex="-1">How can we reach you?</legend><label class="field"><span>Email</span><input type="email" name="email" autocomplete="email" required></label><label class="field"><span>Phone number</span><input type="tel" name="phone" autocomplete="tel" inputmode="tel" required></label></fieldset><div id="cf-turnstile" style="margin-top:18px;min-height:0"></div>';
-    for(const key of ['email','phone']) form.elements[key].value=answers[key]||'';
+    fields.innerHTML='<fieldset><legend tabindex="-1">How can we reach you?</legend><label class="field"><span>Your name</span><input type="text" name="name" autocomplete="name" placeholder="First and last name" required></label><label class="field"><span>Email</span><input type="email" name="email" autocomplete="email" required></label><label class="field"><span>Phone number</span><input type="tel" name="phone" autocomplete="tel" inputmode="tel" required></label></fieldset><div id="cf-turnstile" style="margin-top:18px;min-height:0"></div>';
+    for(const key of ['name','email','phone']) form.elements[key].value=answers[key]||'';
     if(tsReady) mountTurnstile();
   }else{
     /* leaving the contact step destroys the host div - take the widget with it */
@@ -109,9 +109,23 @@ form.addEventListener('submit',async event=>{
   event.preventDefault();
   if(sending) return;
   remember();
-  if(index<questions.length){index++;render(true);return}
+  if(index<questions.length){
+    const q=questions[index][0];
+    if(!form.querySelector('input[name="'+q+'"]:checked')){
+      const e0=document.querySelector('#formError');
+      if(e0){e0.hidden=false;e0.textContent='Please pick an option to keep going.';}
+      return;
+    }
+    index++;render(true);return;
+  }
   sending=true; next.disabled=true; next.textContent='Sending…';
   const errEl=document.querySelector('#formError');
+  const nameVal=(form.elements.name?form.elements.name.value:'').trim();
+  if(nameVal.length<2){ errEl.hidden=false; errEl.textContent='Please tell us your name so we know who we are replying to.'; sending=false; next.disabled=false; next.textContent='Send application'; return; }
+  const emailVal=(form.elements.email?form.elements.email.value:'').trim();
+  const phoneVal=(form.elements.phone?form.elements.phone.value:'').trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(emailVal)){ errEl.hidden=false; errEl.textContent='Please enter a valid email address so we can reply.'; sending=false; next.disabled=false; next.textContent='Send application'; return; }
+  if(phoneVal.replace(/\D/g,'').length<7){ errEl.hidden=false; errEl.textContent='Please enter a phone number we can reach you on.'; sending=false; next.disabled=false; next.textContent='Send application'; return; }
   if(window.turnstile && !tsToken){
     next.textContent='Checking…';
     const okToken=await waitForTurnstile(15000);
@@ -122,12 +136,8 @@ form.addEventListener('submit',async event=>{
       return;
     }
   }
-  const emailVal=(form.elements.email?form.elements.email.value:'').trim();
-  const phoneVal=(form.elements.phone?form.elements.phone.value:'').trim();
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(emailVal)){ errEl.hidden=false; errEl.textContent='Please enter a valid email address so we can reply.'; sending=false; next.disabled=false; next.textContent='Send application'; return; }
-  if(phoneVal.replace(/\D/g,'').length<7){ errEl.hidden=false; errEl.textContent='Please enter a phone number we can reach you on.'; sending=false; next.disabled=false; next.textContent='Send application'; return; }
   const payload={
-    name:(answers.name||'').trim(),
+    name:nameVal,
     email:emailVal,
     phone:phoneVal,
     company:form.elements.company?form.elements.company.value:'',
@@ -138,7 +148,7 @@ form.addEventListener('submit',async event=>{
     cf_turnstile_response:tsToken
   };
   try{
-    const res=await fetch(API+'/api/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const res=await fetch(API+'/api/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:AbortSignal.timeout(25000)});
     const data=await res.json().catch(()=>({}));
     if(!res.ok||!data.ok) throw new Error(data.error||('request failed ('+res.status+')'));
     errEl.hidden=true;
@@ -254,7 +264,7 @@ updateMobileApply();
 
 const heroVideo=document.getElementById('herovideo');
 const soundToggle=document.getElementById('soundToggle');
-let soundWanted=true, audioArmed=false, fadeTimer=null;
+let soundWanted=true, audioArmed=false, pendingAudio=false, fadeTimer=null;
 
 function fadeVolumeTo(target,duration){
   if(fadeTimer){clearInterval(fadeTimer);fadeTimer=null;}
@@ -273,14 +283,23 @@ function paintSound(on){
 }
 function armAudio(){
   if(audioArmed) return;
-  audioArmed=true;
   if(!soundWanted) return;
+  /* the video may not have loaded yet - remember the tap, do not swallow it */
+  pendingAudio=true;
+  tryPlayWithSound();
+}
+/* the audio counts as armed only once the browser has actually played it */
+function tryPlayWithSound(){
+  if(audioArmed) return;
   heroVideo.volume=0;
   heroVideo.muted=false;
   const p=heroVideo.play();
-  if(p&&p.then) p.then(()=>fadeVolumeTo(1,1400)).catch(()=>{heroVideo.muted=true;heroVideo.volume=1;paintSound(false);});
-  else {heroVideo.muted=true;heroVideo.volume=1;}
-  paintSound(true);
+  if(p&&p.then){
+    p.then(()=>{audioArmed=true;pendingAudio=false;fadeVolumeTo(1,1400);paintSound(true);})
+     .catch(()=>{heroVideo.muted=true;heroVideo.volume=1;paintSound(false);});
+  }else{
+    heroVideo.muted=true;heroVideo.volume=1;
+  }
 }
 if(heroVideo){
   const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -290,7 +309,11 @@ if(heroVideo){
   }else{
     heroVideo.play().catch(()=>{});
   }
-  heroVideo.addEventListener('canplay',()=>{if(!reduceMotion) heroVideo.play().catch(()=>{})});
+  heroVideo.addEventListener('canplay',()=>{
+    if(!reduceMotion) heroVideo.play().catch(()=>{});
+    /* a tap that arrived before the video loaded still counts */
+    if(pendingAudio&&!audioArmed) tryPlayWithSound();
+  });
   if(soundToggle){
     soundToggle.addEventListener('click',()=>{
       audioArmed=true;
