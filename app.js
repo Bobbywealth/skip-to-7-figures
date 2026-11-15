@@ -182,6 +182,11 @@ form.addEventListener('submit',async event=>{
       del.querySelector('a').href='/delete.html#email='+encodeURIComponent(payload.email)+'&token='+encodeURIComponent(data.delete_token);
     }
     answers={};fields.replaceChildren();form.hidden=true;done.hidden=false;done.querySelector('h3').focus();
+    const cal=document.querySelector('#calwrap');
+    if(cal&&!cal.dataset.built){cal.dataset.built='1';
+      const cu='https://calendly.com/keenanjordan31/30min?hide_gdpr_banner=1&name='+encodeURIComponent(payload.name||'')+'&email='+encodeURIComponent(payload.email||'');
+      cal.innerHTML='<div class="calendly-inline-widget" data-url="'+cu+'" style="width:100%;min-width:0;height:700px;"></div>';
+      const cs=document.createElement('script');cs.src='https://assets.calendly.com/assets/external/widget.js';cs.async=true;document.body.appendChild(cs);}
   }catch(err){
     errEl.hidden=false;
     errEl.textContent='We couldn’t send your application — '+(err&&err.message?err.message:'network error')+'. Please try again, or email us at business@wolfpaqmarketing.com.';
