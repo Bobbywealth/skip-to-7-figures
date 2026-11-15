@@ -169,15 +169,15 @@ h3{font-size:clamp(1.15rem,1.6vw,1.42rem);letter-spacing:-.015em}
 .hero__cta{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-top:36px}
 .hero__sub{font-size:.82rem;color:var(--muted-dk);letter-spacing:.02em}
 .hero__frame{
-  position:relative;justify-self:end;width:fit-content;max-width:100%;
+  position:relative;justify-self:stretch;width:100%;max-width:100%;
 }
 .hero__media{
-  position:relative;width:auto;height:min(70vh,620px);aspect-ratio:9/16;max-width:100%;
+  position:relative;width:100%;height:auto;aspect-ratio:16/9;max-width:100%;
   border-radius:22px;border:1px solid var(--line-gold-dk);overflow:hidden;
-  box-shadow:0 44px 90px -44px rgba(0,0,0,.85);
+  box-shadow:0 44px 90px -44px rgba(0,0,0,.85),0 18px 54px -18px rgba(217,168,95,.35);
 }
 .hero__photo{
-  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 12%;
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;
   display:block;background:#141110;
 }
 .hero__sound{
@@ -320,6 +320,11 @@ h3{font-size:clamp(1.15rem,1.6vw,1.42rem);letter-spacing:-.015em}
 .trust__shot img{width:100%;height:auto;display:block;border-radius:18px}
 .story__portrait{max-width:380px;margin:44px auto 0;text-align:center}
 .story__portrait img{width:100%;height:auto;display:block;border-radius:18px}
+.calbook{margin-top:30px}
+.calbook h4{font-size:1.15rem;margin-bottom:6px}
+#calwrap{margin-top:16px;border-radius:16px;overflow:hidden;background:#fff}
+.story__video{width:100%;height:auto;display:block;border-radius:18px;background:#141110}
+@media (max-width:720px){.vtesti__grid{grid-template-columns:repeat(2,minmax(0,1fr));max-width:520px}}
 .testi__hint{font:500 .78rem/1 var(--mono);letter-spacing:.1em;color:var(--muted)}
 
 /* the header is fixed, so an anchor target must not land under it */
@@ -431,8 +436,8 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
   .hero__cta{gap:16px;margin-top:28px}
   .hero__cta .btn{width:100%;justify-content:center}
   .hero__frame{width:100%;max-width:100%}
-  .hero__media{height:auto;width:100%;aspect-ratio:4/5}
-  .hero__photo{object-position:center 8%}
+  .hero__media{height:auto;width:100%;aspect-ratio:16/9}
+  .hero__photo{object-position:center}
   .hero__caption{margin-top:14px}
   .apply__list{display:none}
   .apply__aside{margin-bottom:-4px}
@@ -529,9 +534,8 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
     </div>
     <figure class="hero__frame reveal in" data-d="1">
       <div class="hero__media">
-        <video class="hero__photo" id="herovideo" muted loop playsinline preload="none" poster="hero-poster.webp" width="720" height="1280" aria-label="Keenan Williams speaking to camera about building an e-commerce brand">
-          <source data-src="hero-mobile.mp4" type="video/mp4" media="(max-width:720px)">
-          <source data-src="hero.mp4" type="video/mp4">
+        <video class="hero__photo" id="herovideo" muted loop playsinline preload="none" poster="hero-main-poster.webp" width="1280" height="720" aria-label="Keenan Williams speaking from his Rolls-Royce about building a real business">
+          <source data-src="hero-main.mp4" type="video/mp4">
         </video>
         <button class="hero__sound" id="soundToggle" type="button" aria-label="Turn sound on" aria-pressed="false">
           <svg class="ico ico-mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m16 9 5 6"/><path d="m21 9-5 6"/></svg>
@@ -633,6 +637,12 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
         <p>Questions in the meantime? Email us at <a href="mailto:business@wolfpaqmarketing.com">business@wolfpaqmarketing.com</a>.</p>
         <p class="refnum" id="refnum" hidden></p>
         <p class="refnum" id="deletelink" hidden><a href="/delete.html" style="color:inherit;text-decoration:underline">Delete this application anytime</a></p>
+        <div class="calbook">
+          <h4>Next step: book your call</h4>
+          <p>Pick a time that works for you. Calls run 15 minutes, every day between 9:30 AM and 5:30 PM Eastern.</p>
+          <div id="calwrap"></div>
+          <p style="margin-top:12px"><a href="https://calendly.com/keenanjordan31/30min" target="_blank" rel="noopener">Open the booking page instead &#8599;</a></p>
+        </div>
         <button id="reset" class="btn btn--ghost" type="button">Try again</button>
       </div>
     </div>
@@ -770,6 +780,12 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
     <figure class="story__portrait reveal">
       <img src="keenan-portrait.webp" alt="Portrait of Keenan Williams wearing a blue headwrap, sunglasses, and his diamond 'Papichulo Dreaded' pendant" width="1080" height="1350" loading="lazy">
       <figcaption class="story__cite" style="display:block;margin-top:12px">Keenan Williams — founder of Skip to 7 Figures</figcaption>
+    </figure>
+    <figure class="story__portrait reveal">
+      <video class="story__video" controls preload="none" poster="hero-poster.webp" width="720" height="1280" aria-label="Keenan Williams speaking to camera about building an e-commerce brand">
+        <source src="hero.mp4" type="video/mp4">
+      </video>
+      <figcaption class="story__cite" style="display:block;margin-top:12px">Keenan, in his own words</figcaption>
     </figure>
   
 </section>
