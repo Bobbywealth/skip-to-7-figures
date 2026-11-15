@@ -20,9 +20,11 @@ const STATIC_FILES = [
   'favicon.png', 'apple-touch-icon.png', 'og.jpg', 'robots.txt', 'sitemap.xml', '_headers', '_redirects',
   'hero-poster.webp',
   'header-logo.webp', 'founder.webp', 'founder-before-after.webp',
-  'hero.mp4', 'hero-mobile.mp4', 'hero-poster.jpg',
+  'hero.mp4', 'hero-poster.jpg',
 ];
 for (let i = 1; i <= 7; i++) STATIC_FILES.push(`testimonial-${i}.png`, `testimonial-${i}.webp`);
+for (let i = 1; i <= 8; i++) STATIC_FILES.push(`testimonial-video-${i}.mp4`, `testimonial-video-${i}-poster.jpg`);
+STATIC_FILES.push('hero-main.mp4', 'hero-main-poster.webp', 'student-million.mp4', 'student-million-poster.jpg', 'keenan-portrait.jpg', 'keenan-portrait.webp', 'keenan-rolls.jpg', 'keenan-rolls.webp', 'keenan-students.jpg', 'keenan-students.webp');
 
 const problems = [];
 

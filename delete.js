@@ -14,7 +14,7 @@ document.getElementById('delForm').addEventListener('submit',async e=>{
       token:document.getElementById('token').value.trim()
     })});
     const d=await r.json().catch(()=>({}));
-    if(r.ok&&d.ok){ msg.className='msg ok'; msg.textContent='Your information has been deleted. ('+(d.removed||1)+' application'+(d.removed===1?'':'s')+' removed)'; }
+    if(r.ok&&d.ok){ msg.className='msg ok'; msg.textContent='Your information has been deleted. ('+(d.removed||0)+' application'+(d.removed===1?'':'s')+' removed)'; }
     else { msg.className='msg bad'; msg.textContent=d.error||'We could not delete that. Check the email and delete code and try again.'; }
   }catch(err){ msg.className='msg bad'; msg.textContent='Network error — please try again in a moment.'; }
   btn.disabled=false; btn.textContent='Delete my information';

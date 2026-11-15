@@ -45,7 +45,7 @@
   color-scheme:light;
   --ink:#17120D; --ink-2:#241C15; --ink-3:#2E241B;
   --cream:#FBF8F3; --cream-2:#F2ECE1; --paper:#FFFFFF;
-  --gold:#CFA85F; --gold-lt:#F6D69C; --gold-dp:#9A7038;
+  --gold:#CFA85F; --gold-lt:#F6D69C; --gold-dp:#7C5A26;
   --muted:#6B6459; --muted-dk:#E4DACA;
   --line:rgba(27,22,17,.12); --line-gold:rgba(201,155,84,.34); --line-gold-dk:rgba(241,203,136,.24);
   --serif:'Fraunces',ui-serif,'Iowan Old Style',Georgia,'Times New Roman',serif;
@@ -514,6 +514,11 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
 @media (max-width:1000px){.apply__grid,.story__grid,.hero__grid,.trust__in,.next__grid,.foot__grid{grid-template-columns:minmax(0,1fr)}}
 fieldset{min-width:0}
 #cf-turnstile{max-width:100%;overflow:hidden}
+/* audit fixes: footer text contrast on the dark footer + results counter anchoring */
+.foot__legal a{color:#B4AA9C}
+.foot__fine{color:#B4AA9C;opacity:1}
+.foot small{opacity:.9}
+.track{position:relative}
 #apply{overflow-x:clip}
 </style>
 </head>
@@ -552,7 +557,7 @@ fieldset{min-width:0}
           </figure>
       <div class="hero__cta">
         <a class="btn" href="#apply">Start your application ↗</a>
-        <span class="hero__sub">Free to apply &#183; 5 questions &#183; No commitment</span>
+        <span class="hero__sub">Free to apply &#183; 7 quick steps &#183; No commitment</span>
       </div>
     </div>
   </div>
@@ -624,21 +629,21 @@ fieldset{min-width:0}
       <form id="application" novalidate>
         <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
         <div class="formcard__top">
-          <span class="formcard__step" id="step" aria-live="polite">Step 1 of 6</span>
+          <span class="formcard__step" id="step" aria-live="polite">Step 1 of 7</span>
           <span class="rail" id="rail" aria-hidden="true"></span>
         </div>
         <progress id="progress" max="7" value="1" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap" aria-label="Application progress"></progress>
         <div class="resume" id="resumeBar" hidden>
           <p><strong>Pick up where you left off.</strong> We saved your answers on this device.</p>
-          <button class="btn sm gold" id="resumeYes" type="button">Continue</button>
-          <button class="btn sm ghost" id="resumeNo" type="button">Start over</button>
+          <button class="btn" id="resumeYes" type="button">Continue</button>
+          <button class="btn btn--ghost" id="resumeNo" type="button">Start over</button>
         </div>
         <div id="fields"></div>
         <div class="actions">
           <button class="btn btn--ghost" type="button" id="back" hidden>Back</button>
           <button class="btn" id="next" type="submit">Continue</button>
         </div>
-        <p class="note" id="formError" hidden style="background:#FCEBE7;border:1px solid #E6B7AC;color:#8A2E22;padding:11px 13px;border-radius:10px"></p>
+        <p class="note" id="formError" role="alert" hidden style="background:#FCEBE7;border:1px solid #E6B7AC;color:#8A2E22;padding:11px 13px;border-radius:10px"></p>
         <p class="note">Your details are only used to reply about your application.</p>
         <p class="note note--alt">Prefer to talk first? The fastest way to reach Keenan is still the application — it takes two minutes, and every one gets a reply.</p>
       </form>
@@ -660,7 +665,7 @@ fieldset{min-width:0}
   </div>
 </section>
 
-<section class="band next" id="next">
+<section class="band next" id="after">
   <div class="wrap">
     <span class="eyebrow reveal">What happens next</span>
     <h2 class="reveal" data-d="1" style="margin-top:18px">After you hit send.</h2>
@@ -708,7 +713,7 @@ fieldset{min-width:0}
     <h2 class="reveal" data-d="1" style="margin-top:18px">A student’s store crosses<br>$1 million in sales.</h2>
     <p class="lede reveal" data-d="2" style="margin-inline:auto">Recorded live: the moment a student’s store crossed $1,000,000 in total sales.</p>
     <div class="milestone__frame reveal" data-d="2">
-      <video controls playsinline preload="none" poster="student-million-poster.jpg" width="720" height="1280" aria-label="Video of a student celebrating crossing one million dollars in store sales">
+      <video controls playsinline preload="metadata" poster="student-million-poster.jpg" width="720" height="1280" aria-label="Video of a student celebrating crossing one million dollars in store sales">
         <source src="student-million.mp4" type="video/mp4">
         Your browser does not support embedded video. <a href="student-million.mp4">Watch the video</a>.
       </video>
@@ -723,49 +728,49 @@ fieldset{min-width:0}
     <h2 class="reveal" data-d="1" style="margin-top:18px">Students, in their own words.</h2>
     <div class="vtesti__grid reveal" data-d="2">
       <figure class="vtesti__item">
-        <video controls playsinline preload="none" poster="testimonial-video-1-poster.jpg" width="720" height="1280" aria-label="Video testimonial from a student of the program">
+        <video controls playsinline preload="metadata" poster="testimonial-video-1-poster.jpg" width="720" height="1280" aria-label="Video testimonial from a student of the program">
           <source src="testimonial-video-1.mp4" type="video/mp4">
           Your browser does not support embedded video. <a href="testimonial-video-1.mp4">Watch the video</a>.
         </video>
       </figure>
       <figure class="vtesti__item">
-        <video controls playsinline preload="none" poster="testimonial-video-2-poster.jpg" width="720" height="774" aria-label="Video testimonial 2 from a student of the program">
+        <video controls playsinline preload="metadata" poster="testimonial-video-2-poster.jpg" width="720" height="774" aria-label="Video testimonial 2 from a student of the program">
           <source src="testimonial-video-2.mp4" type="video/mp4">
           Your browser does not support embedded video. <a href="testimonial-video-2.mp4">Watch the video</a>.
         </video>
       </figure>
       <figure class="vtesti__item">
-        <video controls playsinline preload="none" poster="testimonial-video-3-poster.jpg" width="720" height="1280" aria-label="Video testimonial 3 from a student of the program">
+        <video controls playsinline preload="metadata" poster="testimonial-video-3-poster.jpg" width="720" height="1280" aria-label="Video testimonial 3 from a student of the program">
           <source src="testimonial-video-3.mp4" type="video/mp4">
           Your browser does not support embedded video. <a href="testimonial-video-3.mp4">Watch the video</a>.
         </video>
       </figure>
       <figure class="vtesti__item">
-        <video controls playsinline preload="none" poster="testimonial-video-4-poster.jpg" width="720" height="810" aria-label="Video testimonial 4 from a student of the program">
+        <video controls playsinline preload="metadata" poster="testimonial-video-4-poster.jpg" width="720" height="810" aria-label="Video testimonial 4 from a student of the program">
           <source src="testimonial-video-4.mp4" type="video/mp4">
           Your browser does not support embedded video. <a href="testimonial-video-4.mp4">Watch the video</a>.
         </video>
       </figure>
       <figure class="vtesti__item">
-        <video controls playsinline preload="none" poster="testimonial-video-5-poster.jpg" width="720" height="1280" aria-label="Video testimonial 5 from a student of the program">
+        <video controls playsinline preload="metadata" poster="testimonial-video-5-poster.jpg" width="720" height="1280" aria-label="Video testimonial 5 from a student of the program">
           <source src="testimonial-video-5.mp4" type="video/mp4">
           Your browser does not support embedded video. <a href="testimonial-video-5.mp4">Watch the video</a>.
         </video>
       </figure>
       <figure class="vtesti__item">
-        <video controls playsinline preload="none" poster="testimonial-video-6-poster.jpg" width="720" height="1280" aria-label="Video testimonial 6 from a student of the program">
+        <video controls playsinline preload="metadata" poster="testimonial-video-6-poster.jpg" width="720" height="1280" aria-label="Video testimonial 6 from a student of the program">
           <source src="testimonial-video-6.mp4" type="video/mp4">
           Your browser does not support embedded video. <a href="testimonial-video-6.mp4">Watch the video</a>.
         </video>
       </figure>
       <figure class="vtesti__item">
-        <video controls playsinline preload="none" poster="testimonial-video-7-poster.jpg" width="720" height="1280" aria-label="Video testimonial 7 from a student of the program">
+        <video controls playsinline preload="metadata" poster="testimonial-video-7-poster.jpg" width="720" height="1280" aria-label="Video testimonial 7 from a student of the program">
           <source src="testimonial-video-7.mp4" type="video/mp4">
           Your browser does not support embedded video. <a href="testimonial-video-7.mp4">Watch the video</a>.
         </video>
       </figure>
       <figure class="vtesti__item">
-        <video controls playsinline preload="none" poster="testimonial-video-8-poster.jpg" width="720" height="1094" aria-label="Video testimonial 8 from a student of the program">
+        <video controls playsinline preload="metadata" poster="testimonial-video-8-poster.jpg" width="720" height="1094" aria-label="Video testimonial 8 from a student of the program">
           <source src="testimonial-video-8.mp4" type="video/mp4">
           Your browser does not support embedded video. <a href="testimonial-video-8.mp4">Watch the video</a>.
         </video>
