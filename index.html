@@ -312,6 +312,9 @@ h3{font-size:clamp(1.15rem,1.6vw,1.42rem);letter-spacing:-.015em}
 .mobile-proof-cta{display:none}
 .milestone__frame{max-width:400px;margin:34px auto 0}
 .milestone__frame video{width:100%;height:auto;display:block;border-radius:18px;background:#000}
+.vtesti__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,220px));justify-content:center;gap:18px;max-width:980px;margin:34px auto 0}
+.vtesti__item{margin:0}
+.vtesti__item video{width:100%;aspect-ratio:9/16;object-fit:cover;display:block;border-radius:16px;background:#000}
 .testi__hint{font:500 .78rem/1 var(--mono);letter-spacing:.1em;color:var(--muted)}
 
 /* the header is fixed, so an anchor target must not land under it */
@@ -633,6 +636,23 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
       </video>
     </div>
     <small style="display:block;margin-top:16px;color:var(--muted);font-size:.82rem">Client-reported result. Individual results vary.</small>
+  </div>
+</section>
+
+
+<section class="band vtesti" id="video-testimonials">
+  <div class="wrap" style="text-align:center">
+    <span class="eyebrow reveal">Video testimonials</span>
+    <h2 class="reveal" data-d="1" style="margin-top:18px">Students, in their own words.</h2>
+    <div class="vtesti__grid reveal" data-d="2">
+      <figure class="vtesti__item">
+        <video controls playsinline preload="none" poster="testimonial-video-1-poster.jpg" width="720" height="1280" aria-label="Video testimonial from a student of the program">
+          <source src="testimonial-video-1.mp4" type="video/mp4">
+          Your browser does not support embedded video. <a href="testimonial-video-1.mp4">Watch the video</a>.
+        </video>
+      </figure>
+    </div>
+    <small style="display:block;margin-top:16px;color:var(--muted);font-size:.82rem">Client-shared videos. Individual results vary.</small>
   </div>
 </section>
 
