@@ -66,6 +66,8 @@ body{
   -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
   overflow-x:hidden;
 }
+html,body{overflow-x:hidden}
+@supports (overflow:clip){html,body{overflow-x:clip}}
 .skip{position:absolute;left:-9999px;top:0;z-index:200;background:var(--gold);color:#1B1611;padding:14px 22px;border-radius:0 0 12px 0;font-weight:700;text-decoration:none}
 .skip:focus{left:0}
 :focus-visible{outline:3px solid var(--gold);outline-offset:3px}
