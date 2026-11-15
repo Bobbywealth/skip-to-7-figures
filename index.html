@@ -310,6 +310,8 @@ h3{font-size:clamp(1.15rem,1.6vw,1.42rem);letter-spacing:-.015em}
 .tcard span{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 20px;font:600 .85rem/1 var(--sans)}
 .tcard span::after{content:"↗";color:var(--gold-dp)}
 .mobile-proof-cta{display:none}
+.milestone__frame{max-width:400px;margin:34px auto 0}
+.milestone__frame video{width:100%;height:auto;display:block;border-radius:18px;background:#000}
 .testi__hint{font:500 .78rem/1 var(--mono);letter-spacing:.1em;color:var(--muted)}
 
 /* the header is fixed, so an anchor target must not land under it */
@@ -615,6 +617,22 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
     <p class="testi__hint">Swipe or scroll to explore · Tap an image to enlarge</p>
     <small style="display:block;margin-top:14px;color:var(--muted);font-size:.82rem">Client-reported results. Sales figures reflect the periods shown in each image. Individual results vary.</small>
     <p style="margin-top:34px"><a class="btn" href="#apply">Start your application ↗</a></p>
+  </div>
+</section>
+
+
+<section class="band milestone" id="milestone">
+  <div class="wrap" style="text-align:center">
+    <span class="eyebrow reveal">Student milestone</span>
+    <h2 class="reveal" data-d="1" style="margin-top:18px">Watch a student hit<br>the $1 million mark.</h2>
+    <p class="lede reveal" data-d="2" style="margin-inline:auto">The moment a student’s store crossed $1,000,000 in sales — caught on camera.</p>
+    <div class="milestone__frame reveal" data-d="2">
+      <video controls playsinline preload="none" poster="student-million-poster.jpg" width="720" height="1280" aria-label="Video of a student celebrating crossing one million dollars in store sales">
+        <source src="student-million.mp4" type="video/mp4">
+        Your browser does not support embedded video. <a href="student-million.mp4">Watch the video</a>.
+      </video>
+    </div>
+    <small style="display:block;margin-top:16px;color:var(--muted);font-size:.82rem">Client-reported result. Individual results vary.</small>
   </div>
 </section>
 
