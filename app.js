@@ -17,6 +17,7 @@ function mountTurnstile(){
   try{
     tsWidget=window.turnstile.render(host,{
       sitekey:TS_SITEKEY,
+      size:'flexible',
       callback:(t)=>{ tsToken=t; },
       'expired-callback':()=>{ tsToken=''; },
       'error-callback':()=>{ tsToken=''; }
