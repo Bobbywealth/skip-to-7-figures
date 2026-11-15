@@ -8,7 +8,7 @@ const API='https://skip-to-7-figures-admin.skip7figures.workers.dev';
 
 /* ---------- Cloudflare Turnstile (bot protection) ---------- */
 const TS_SITEKEY='0x4AAAAAAF-4Gnj0g3OX0_Xe';
-let tsWidget=null, tsToken='', tsReady=false;
+let tsWidget=null, tsToken='', tsReady=false, tsFailed=false;
 function sf7TurnstileReady(){ tsReady=true; mountTurnstile(); }
 function mountTurnstile(){
   if(tsWidget!==null||!window.turnstile) return;
@@ -18,14 +18,14 @@ function mountTurnstile(){
     tsWidget=window.turnstile.render(host,{
       sitekey:TS_SITEKEY,
       size:'flexible',
-      callback:(t)=>{ tsToken=t; },
+      callback:(t)=>{ tsToken=t; tsFailed=false; },
       'expired-callback':()=>{ tsToken=''; },
-      'error-callback':()=>{ tsToken=''; }
+      'error-callback':()=>{ tsToken=''; tsFailed=true; }
     });
   }catch(e){ tsToken=''; }
 }
 function resetTurnstile(){
-  tsToken='';
+  tsToken=''; tsFailed=false;
   if(window.turnstile && tsWidget!==null){ try{ window.turnstile.reset(tsWidget); }catch(e){} }
 }
 function destroyTurnstile(){
@@ -88,6 +88,7 @@ function render(focus=false){
   prog.max=TOTAL;
   prog.value=index+1;
   renderRail();
+  const formErr=document.querySelector('#formError'); if(formErr) formErr.hidden=true;
   back.hidden=index===0;
   next.textContent=index===questions.length+1?'Send application':'Continue';
   if(index===questions.length){
@@ -139,23 +140,34 @@ form.addEventListener('submit',async event=>{
     errEl.hidden=true;
     index++;render(true);return;
   }
-  sending=true; next.disabled=true; next.textContent='Sending…';
+  sending=true; next.disabled=true; back.disabled=true; next.textContent='Sending…';
   const errEl=document.querySelector('#formError');
   const nameVal=(answers.name||'').trim();
-  if(nameVal.length<2){ errEl.hidden=false; errEl.textContent='Please tell us your name so we know who we are replying to.'; sending=false; next.disabled=false; next.textContent='Send application'; return; }
+  if(nameVal.length<2){ errEl.hidden=false; errEl.textContent='Please tell us your name so we know who we are replying to.'; sending=false; next.disabled=false; back.disabled=false; next.textContent='Send application'; return; }
   const emailVal=(answers.email||'').trim();
   const phoneVal=(form.elements.phone?form.elements.phone.value:'').trim();
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(emailVal)){ errEl.hidden=false; errEl.textContent='Please enter a valid email address so we can reply.'; sending=false; next.disabled=false; next.textContent='Send application'; return; }
-  if(phoneVal.replace(/\D/g,'').length<7){ errEl.hidden=false; errEl.textContent='Please enter a phone number we can reach you on.'; sending=false; next.disabled=false; next.textContent='Send application'; return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(emailVal)){ errEl.hidden=false; errEl.textContent='Please enter a valid email address so we can reply.'; sending=false; next.disabled=false; back.disabled=false; next.textContent='Send application'; return; }
+  if(phoneVal.replace(/\D/g,'').length<7){ errEl.hidden=false; errEl.textContent='Please enter a phone number we can reach you on.'; sending=false; next.disabled=false; back.disabled=false; next.textContent='Send application'; return; }
   if(window.turnstile && !tsToken){
-    next.textContent='Checking…';
+    if(tsFailed){
+      errEl.hidden=false;
+      errEl.textContent='The human check failed to load. Please refresh the page and try again.';
+      resetTurnstile();
+      sending=false; next.disabled=false; back.disabled=false; next.textContent='Send application';
+      return;
+    }
+    next.textContent='Waiting for the human check…';
+    errEl.hidden=false;
+    errEl.textContent='Almost there — tick the "Verify you are human" box above and your application will send.';
     const okToken=await waitForTurnstile(15000);
     if(!okToken){
       errEl.hidden=false;
-      errEl.textContent='The human check did not load. Please refresh the page and try again, or email us directly.';
-      sending=false; next.disabled=false; next.textContent='Send application';
+      errEl.textContent='The human check did not finish. Tick the "Verify you are human" box above, then press Send application again.';
+      resetTurnstile();
+      sending=false; next.disabled=false; back.disabled=false; next.textContent='Send application';
       return;
     }
+    errEl.hidden=true;
   }
   const payload={
     name:nameVal,
@@ -169,7 +181,9 @@ form.addEventListener('submit',async event=>{
     cf_turnstile_response:tsToken
   };
   try{
-    const res=await fetch(API+'/api/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:AbortSignal.timeout(25000)});
+    const ctl=new AbortController(); const tmr=setTimeout(()=>ctl.abort(),25000);
+    const res=await fetch(API+'/api/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:ctl.signal});
+    clearTimeout(tmr);
     const data=await res.json().catch(()=>({}));
     if(!res.ok||!data.ok) throw new Error(data.error||('request failed ('+res.status+')'));
     errEl.hidden=true;
@@ -190,10 +204,10 @@ form.addEventListener('submit',async event=>{
       const cs=document.createElement('script');cs.src='https://assets.calendly.com/assets/external/widget.js';cs.async=true;document.body.appendChild(cs);}
   }catch(err){
     errEl.hidden=false;
-    errEl.textContent='We couldn’t send your application — '+(err&&err.message?err.message:'network error')+'. Please try again.';
+    errEl.textContent='We couldn’t send your application — '+((err&&err.name==='AbortError')?'the request timed out':(err&&err.message?err.message:'network error'))+'. Please try again.';
     /* the token may have been spent or expired - get a fresh one for the retry */
     resetTurnstile();
-    sending=false; next.disabled=false; next.textContent='Send application';
+    sending=false; next.disabled=false; back.disabled=false; next.textContent='Send application';
   }
 });
 back.addEventListener('click',()=>{remember();index--;render(true)});
@@ -264,10 +278,9 @@ window.addEventListener('scroll',updateMobileApply,{passive:true});
 window.addEventListener('resize',updateMobileApply);
 updateMobileApply();
 
-/* hero video: muted autoplay, then sound on automatically at the first visitor interaction.
-   Browsers block audible autoplay on a fresh landing (Chrome pauses the element and
-   play() rejects with NotAllowedError), so the video starts muted and the audio is
-   armed the moment the visitor clicks, taps, presses a key or scrolls. */
+/* hero video: muted autoplay. Sound arms only when the visitor interacts with the
+   hero itself - a tap anywhere else on the page (e.g. answering the form) must never
+   start audio unexpectedly. The sound toggle is the explicit control. */
 /* the hero video is 6.7MB - the poster is the LCP, so the video is only
    fetched once the page has painted. A visitor on a slow connection or with
    reduced motion keeps the poster and never downloads it. */
@@ -359,8 +372,9 @@ if(heroVideo){
       }
     });
   }
-  ['pointerdown','touchstart','keydown','click'].forEach(evt=>{
-    window.addEventListener(evt,armAudio,{once:true,passive:true});
+  const heroMedia=heroVideo.closest('figure')||heroVideo;
+  ['pointerdown','click'].forEach(evt=>{
+    heroMedia.addEventListener(evt,armAudio,{once:true,passive:true});
   });
 }
 
@@ -412,6 +426,7 @@ updateCount();
   if(bar){
     let draft=null;
     try{ draft=JSON.parse(localStorage.getItem('sf7_draft')||'null'); }catch(e){}
+    if(draft&&draft.at&&Date.now()-draft.at>30*24*3600*1000){ try{ localStorage.removeItem('sf7_draft'); }catch(e){} draft=null; }
     if(draft&&draft.answers&&Object.keys(draft.answers).length){
       bar.hidden=false;
       document.getElementById('resumeYes').addEventListener('click',()=>{
@@ -439,18 +454,6 @@ updateCount();
     window.addEventListener('scroll',onScroll,{passive:true});
     onScroll();
     top.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
-  }
-  const share=document.getElementById('shareBtn');
-  if(share){
-    share.addEventListener('click',async()=>{
-      const data={title:document.title,text:'Build your own beauty brand - Skip to 7 Figures',url:location.href};
-      try{
-        if(navigator.share){ await navigator.share(data); return; }
-        await navigator.clipboard.writeText(location.href);
-        share.textContent='Link copied';
-        setTimeout(()=>{share.textContent='Share this page ↗';},2200);
-      }catch(e){}
-    });
   }
 })();
 
