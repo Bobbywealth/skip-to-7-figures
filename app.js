@@ -189,7 +189,7 @@ form.addEventListener('submit',async event=>{
       const cs=document.createElement('script');cs.src='https://assets.calendly.com/assets/external/widget.js';cs.async=true;document.body.appendChild(cs);}
   }catch(err){
     errEl.hidden=false;
-    errEl.textContent='We couldn’t send your application — '+(err&&err.message?err.message:'network error')+'. Please try again, or email us at business@wolfpaqmarketing.com.';
+    errEl.textContent='We couldn’t send your application — '+(err&&err.message?err.message:'network error')+'. Please try again.';
     /* the token may have been spent or expired - get a fresh one for the retry */
     resetTurnstile();
     sending=false; next.disabled=false; next.textContent='Send application';
