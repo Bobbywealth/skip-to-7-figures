@@ -199,9 +199,11 @@ form.addEventListener('submit',async event=>{
     answers={};fields.replaceChildren();form.hidden=true;done.hidden=false;done.querySelector('h3').focus();
     const cal=document.querySelector('#calwrap');
     if(cal&&!cal.dataset.built){cal.dataset.built='1';
-      const cu='https://calendly.com/keenanjordan31/30min?hide_gdpr_banner=1&name='+encodeURIComponent(payload.name||'')+'&email='+encodeURIComponent(payload.email||'');
+      const summary='Application details \u2014 Capital: '+(payload.capital||'-')+' \u00b7 Timeline: '+(payload.timeline||'-')+' \u00b7 Experience: '+(payload.experience||'-')+' \u00b7 Interest: '+(payload.interest||'-')+' \u00b7 Decision maker: '+(payload.decision||'-')+' \u00b7 Phone: '+(payload.phone||'-');
+      const cu='https://calendly.com/keenanjordan31/30min?hide_gdpr_banner=1&name='+encodeURIComponent(payload.name||'')+'&email='+encodeURIComponent(payload.email||'')+'&a1='+encodeURIComponent(summary);
       cal.innerHTML='<div class="calendly-inline-widget" data-url="'+cu+'" style="width:100%;min-width:0;height:700px;"></div>';
-      const cs=document.createElement('script');cs.src='https://assets.calendly.com/assets/external/widget.js';cs.async=true;document.body.appendChild(cs);}
+      const cs=document.createElement('script');cs.src='https://assets.calendly.com/assets/external/widget.js';cs.async=true;document.body.appendChild(cs);
+      done.querySelectorAll('a[href*="calendly.com"]').forEach(a=>{a.href=cu;});}
   }catch(err){
     errEl.hidden=false;
     errEl.textContent='We couldn’t send your application — '+((err&&err.name==='AbortError')?'the request timed out':(err&&err.message?err.message:'network error'))+'. Please try again.';
