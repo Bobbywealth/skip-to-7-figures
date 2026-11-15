@@ -316,6 +316,10 @@ h3{font-size:clamp(1.15rem,1.6vw,1.42rem);letter-spacing:-.015em}
 .vtesti__item{margin:0}
 .vtesti__item video{width:100%;height:auto;display:block;border-radius:16px;background:#000}
 .vtesti__grid{align-items:start}
+.trust__shot{max-width:880px;margin:28px auto 0;text-align:center}
+.trust__shot img{width:100%;height:auto;display:block;border-radius:18px}
+.story__portrait{max-width:380px;margin:44px auto 0;text-align:center}
+.story__portrait img{width:100%;height:auto;display:block;border-radius:18px}
 .testi__hint{font:500 .78rem/1 var(--mono);letter-spacing:.1em;color:var(--muted)}
 
 /* the header is fixed, so an anchor target must not land under it */
@@ -552,6 +556,10 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
     <div class="trust__item"><b>6, 7, 8 figures</b><span>Brands he has helped build</span></div>
     <div class="trust__item"><b>Beauty &amp; wellness</b><span>Skincare, hair, feminine care</span></div>
     <p class="trust__note">Individual results vary. Figures shown are the ones Keenan and his clients have shared.</p>
+    <figure class="trust__shot reveal">
+      <img src="keenan-rolls.webp" alt="Keenan Williams stepping out of his rose-gold Rolls-Royce Cullinan, its door lettered with his Instagram handle and the words 'I create millionaires'" width="1200" height="800" loading="lazy">
+      <figcaption class="testi__hint" style="margin-top:12px">Keenan with his Rolls-Royce — “I create millionaires.”</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -593,6 +601,11 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
       <p style="margin-top:30px"><a class="btn mobile-proof-cta" href="#apply">Start your application ↗</a></p>
     </div>
   </div>
+    <figure class="story__portrait reveal">
+      <img src="keenan-portrait.webp" alt="Portrait of Keenan Williams wearing a blue headwrap, sunglasses, and his diamond 'Papichulo Dreaded' pendant" width="1080" height="1350" loading="lazy">
+      <figcaption class="story__cite" style="display:block;margin-top:12px">Keenan Williams — founder of Skip to 7 Figures</figcaption>
+    </figure>
+  
 </section>
 
 <section class="band testi" id="results">
@@ -604,12 +617,13 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
         <p class="lede reveal" data-d="2">Photos, messages, and sales milestones shared by clients.</p>
       </div>
       <div class="testi__nav reveal" data-d="2">
-        <span class="testi__count" id="tcount">01 / 07</span>
+        <span class="testi__count" id="tcount">01 / 08</span>
         <button class="navbtn" id="tprev" type="button" aria-label="Previous client result">←</button>
         <button class="navbtn" id="tnext" type="button" aria-label="Next client result">→</button>
       </div>
     </div>
-    <div class="track" id="track" tabindex="0" aria-label="Client results. Scroll horizontally to see all seven images.">
+    <div class="track" id="track" tabindex="0" aria-label="Client results. Scroll horizontally to see all eight images.">
+      <a class="tcard" href="keenan-students.jpg" target="_blank" rel="noopener" aria-label="Open photo of Keenan with students at full size"><img src="keenan-students.webp" alt="Keenan Williams with students during a studio session, one student holding up a product" loading="lazy" width="1000" height="750"><span>View full image</span></a>
       <a class="tcard" href="testimonial-1.png" target="_blank" rel="noopener" aria-label="Open client result 1 at full size"><img src="testimonial-1.webp" alt="Client-shared result 1, original photo or screenshot" loading="lazy" width="495" height="660"><span>View full image</span></a>
       <a class="tcard" href="testimonial-2.png" target="_blank" rel="noopener" aria-label="Open client result 2 at full size"><img src="testimonial-2.webp" alt="Client-shared result 2, original photo or screenshot" loading="lazy" width="1284" height="1018"><span>View full image</span></a>
       <a class="tcard" href="testimonial-3.png" target="_blank" rel="noopener" aria-label="Open client result 3 at full size"><img src="testimonial-3.webp" alt="Client-shared result 3, original photo or screenshot" loading="lazy" width="832" height="1800"><span>View full image</span></a>
