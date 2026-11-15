@@ -510,6 +510,11 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
   .js .reveal{opacity:1;transform:none}
 }
+/* width containment: grid tracks and form elements may never exceed the phone screen */
+@media (max-width:1000px){.apply__grid,.story__grid,.hero__grid,.trust__in,.next__grid,.foot__grid{grid-template-columns:minmax(0,1fr)}}
+fieldset{min-width:0}
+#cf-turnstile{max-width:100%;overflow:hidden}
+#apply{overflow-x:clip}
 </style>
 </head>
 <body>
