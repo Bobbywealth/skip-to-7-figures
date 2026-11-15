@@ -81,7 +81,7 @@ a{color:inherit}
 .band{padding-block:var(--band)}
 .eyebrow{
   display:inline-flex;align-items:center;gap:12px;
-  font:600 .72rem/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--gold-dp);
+  font:600 .8rem/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--gold-dp);
 }
 .eyebrow::before{content:"";width:26px;height:1px;background:currentColor;opacity:.55;flex:none}
 .on-dark .eyebrow{color:var(--gold-lt)}
@@ -161,7 +161,7 @@ h3{font-size:clamp(1.15rem,1.6vw,1.42rem);letter-spacing:-.015em}
   content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.18;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
 }
-.hero__grid{display:grid;grid-template-columns:1.18fr .82fr;gap:clamp(32px,5vw,72px);align-items:center}
+.hero__grid{display:grid;grid-template-columns:1fr;gap:0;max-width:940px;margin-inline:auto}
 .hero h1{margin-top:22px}
 .hero h1 em{font-style:normal;display:inline-block;
   background:linear-gradient(96deg,#F1CB88 6%,#D9A85F 52%,#F6DFAE 94%);
@@ -194,7 +194,7 @@ h3{font-size:clamp(1.15rem,1.6vw,1.42rem);letter-spacing:-.015em}
 .hero__sound.is-on{border-color:var(--gold);color:var(--gold-lt)}
 .hero__caption{
   display:flex;align-items:center;gap:10px;margin-top:18px;
-  font:500 .74rem/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted-dk);
+  font:500 .95rem/1.5 var(--sans);letter-spacing:.02em;text-transform:none;color:var(--muted-dk);
 }
 .hero__caption::before{content:"";width:18px;height:1px;background:var(--gold);opacity:.7;flex:none}
 .hero__scroll{
@@ -279,7 +279,7 @@ h3{font-size:clamp(1.15rem,1.6vw,1.42rem);letter-spacing:-.015em}
   font-size:clamp(1.3rem,2.4vw,2rem);line-height:1.28;letter-spacing:-.02em;
   color:var(--gold-lt);margin:26px 0 0;max-width:20ch;
 }
-.story__cite{display:block;margin-top:16px;font:500 .74rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted-dk)}
+.story__cite{display:block;margin-top:16px;font:500 .95rem/1.5 var(--sans);letter-spacing:.01em;text-transform:none;color:var(--muted-dk)}
 
 /* ---------- testimonials ---------- */
 .testi{background:var(--cream-2)}
@@ -320,12 +320,17 @@ h3{font-size:clamp(1.15rem,1.6vw,1.42rem);letter-spacing:-.015em}
 .trust__shot img{width:100%;height:auto;display:block;border-radius:18px}
 .story__portrait{max-width:380px;margin:44px auto 0;text-align:center}
 .story__portrait img{width:100%;height:auto;display:block;border-radius:18px}
+.hero__copy{text-align:center}
+.hero .lede{margin-inline:auto}
+.hero__cta{justify-content:center}
+.hero__frame{margin-top:36px}
+.hero__caption{justify-content:center}
 .calbook{margin-top:30px}
 .calbook h4{font-size:1.15rem;margin-bottom:6px}
 #calwrap{margin-top:16px;border-radius:16px;overflow:hidden;background:#fff}
 .story__video{width:100%;height:auto;display:block;border-radius:18px;background:#141110}
 @media (max-width:720px){.vtesti__grid{grid-template-columns:repeat(2,minmax(0,1fr));max-width:520px}}
-.testi__hint{font:500 .78rem/1 var(--mono);letter-spacing:.1em;color:var(--muted)}
+.testi__hint{font:500 .92rem/1.55 var(--sans);letter-spacing:.01em;color:#4E463C}
 
 /* the header is fixed, so an anchor target must not land under it */
 #apply,#faq,#results,#fit,#process,#story,#trust{scroll-margin-top:84px}
@@ -385,7 +390,7 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
 .foot__brand{max-width:38ch}
 .foot__logo{display:block;width:150px;height:auto;object-fit:contain;opacity:1;margin-bottom:18px}
 .foot__tag{font:400 .95rem/1.6 var(--sans);color:#E4DACA;margin:0 0 12px}
-.foot__fine{font:400 .78rem/1.55 var(--sans);color:var(--muted);opacity:.72;margin:0}
+.foot__fine{font:400 .9rem/1.55 var(--sans);color:var(--muted);opacity:.92;margin:0}
 .foot__col h3{font:600 .74rem/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:#F6D69C;margin:0 0 18px}
 .foot__col ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
 .foot__col a{color:#E4DACA;font:500 .92rem/1.4 var(--sans);text-decoration:none;display:inline-block;padding:4px 0}
@@ -523,27 +528,27 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
 
 <section class="hero" id="hero">
   <div class="wrap hero__grid">
-    <div class="reveal in">
+    <div class="hero__copy reveal in">
       <span class="eyebrow">Beauty &amp; wellness e-commerce</span>
       <h1>Launch your own <em>beauty brand.</em></h1>
       <p class="lede">Turn your product idea into a brand you can sell online. Get hands-on guidance and help building your logo, labels, website and first round of products.</p>
+      <figure class="hero__frame reveal in" data-d="1">
+            <div class="hero__media">
+              <video class="hero__photo" id="herovideo" muted loop playsinline preload="none" poster="hero-main-poster.webp" width="1280" height="720" aria-label="Keenan Williams speaking from his Rolls-Royce about building a real business">
+                <source data-src="hero-main.mp4" type="video/mp4">
+              </video>
+              <button class="hero__sound" id="soundToggle" type="button" aria-label="Turn sound on" aria-pressed="false">
+                <svg class="ico ico-mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m16 9 5 6"/><path d="m21 9-5 6"/></svg>
+                <svg class="ico ico-wave" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+              </button>
+            </div>
+            <figcaption class="hero__caption">Keenan Williams — Founder, Skip to 7 Figures</figcaption>
+          </figure>
       <div class="hero__cta">
         <a class="btn" href="#apply">Start your application ↗</a>
         <span class="hero__sub">Free to apply &#183; 5 questions &#183; No commitment</span>
       </div>
     </div>
-    <figure class="hero__frame reveal in" data-d="1">
-      <div class="hero__media">
-        <video class="hero__photo" id="herovideo" muted loop playsinline preload="none" poster="hero-main-poster.webp" width="1280" height="720" aria-label="Keenan Williams speaking from his Rolls-Royce about building a real business">
-          <source data-src="hero-main.mp4" type="video/mp4">
-        </video>
-        <button class="hero__sound" id="soundToggle" type="button" aria-label="Turn sound on" aria-pressed="false">
-          <svg class="ico ico-mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m16 9 5 6"/><path d="m21 9-5 6"/></svg>
-          <svg class="ico ico-wave" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
-        </button>
-      </div>
-      <figcaption class="hero__caption">Founder of Skip to 7 Figures</figcaption>
-    </figure>
   </div>
   <span class="hero__scroll"><i></i>Scroll</span>
 </section>
@@ -556,13 +561,13 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
 
 <section class="trust" id="trust">
   <div class="wrap trust__in">
-    <div class="trust__item"><b>$8/hr → $1M/month</b><span>Keenan's own before and after</span></div>
+    <div class="trust__item"><b>$8/hr → $1M/month</b><span>Keenan’s own brand, before and after</span></div>
     <div class="trust__item"><b>6, 7, 8 figures</b><span>Brands he has helped build</span></div>
     <div class="trust__item"><b>Beauty &amp; wellness</b><span>Skincare, hair, feminine care</span></div>
     <p class="trust__note">Individual results vary. Figures shown are the ones Keenan and his clients have shared.</p>
     <figure class="trust__shot reveal">
-      <img src="keenan-rolls.webp" alt="Keenan Williams stepping out of his rose-gold Rolls-Royce Cullinan, its door lettered with his Instagram handle and the words 'I create millionaires'" width="1200" height="800" loading="lazy">
-      <figcaption class="testi__hint" style="margin-top:12px">Keenan with his Rolls-Royce — “I create millionaires.”</figcaption>
+      <img src="keenan-rolls.webp" alt="Keenan Williams stepping out of his rose-gold Rolls-Royce Cullinan" width="1200" height="800" loading="lazy">
+      <figcaption class="testi__hint" style="margin-top:12px">Keenan Williams, founder of Skip to 7 Figures.</figcaption>
     </figure>
   </div>
 </section>
@@ -694,8 +699,8 @@ input[type=text]:focus,input[type=email]:focus,input[type=tel]:focus{
 <section class="band milestone" id="milestone">
   <div class="wrap" style="text-align:center">
     <span class="eyebrow reveal">Student milestone</span>
-    <h2 class="reveal" data-d="1" style="margin-top:18px">Watch a student hit<br>the $1 million mark.</h2>
-    <p class="lede reveal" data-d="2" style="margin-inline:auto">The moment a student’s store crossed $1,000,000 in sales — caught on camera.</p>
+    <h2 class="reveal" data-d="1" style="margin-top:18px">A student’s store crosses<br>$1 million in sales.</h2>
+    <p class="lede reveal" data-d="2" style="margin-inline:auto">Recorded live: the moment a student’s store crossed $1,000,000 in total sales.</p>
     <div class="milestone__frame reveal" data-d="2">
       <video controls playsinline preload="none" poster="student-million-poster.jpg" width="720" height="1280" aria-label="Video of a student celebrating crossing one million dollars in store sales">
         <source src="student-million.mp4" type="video/mp4">
