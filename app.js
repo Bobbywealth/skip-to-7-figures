@@ -197,6 +197,8 @@ form.addEventListener('submit',async event=>{
       del.querySelector('a').href='/delete.html#email='+encodeURIComponent(payload.email)+'&token='+encodeURIComponent(data.delete_token);
     }
     answers={};fields.replaceChildren();form.hidden=true;done.hidden=false;done.querySelector('h3').focus();
+    /* Meta Pixel: application submitted = a lead */
+    if(typeof fbq==='function'){ try{ fbq('track','Lead'); }catch(e){} }
     const cal=document.querySelector('#calwrap');
     if(cal&&!cal.dataset.built){cal.dataset.built='1';
       const summary='Application details:\nCapital: '+(payload.capital||'-')+'\nTimeline: '+(payload.timeline||'-')+'\nExperience: '+(payload.experience||'-')+'\nInterest: '+(payload.interest||'-')+'\nDecision maker: '+(payload.decision||'-')+'\nPhone: '+(payload.phone||'-');
@@ -213,6 +215,13 @@ form.addEventListener('submit',async event=>{
   }
 });
 back.addEventListener('click',()=>{remember();index--;render(true)});
+/* Meta Pixel: fire Schedule when a Calendly booking is actually made.
+   The Calendly widget posts calendly.event_scheduled to the parent window. */
+window.addEventListener('message',function(e){
+  if(e && e.origin==='https://calendly.com' && e.data && e.data.event==='calendly.event_scheduled' && typeof fbq==='function'){
+    try{ fbq('track','Schedule'); }catch(err){}
+  }
+});
 document.querySelector('#reset').addEventListener('click',()=>{
   index=0;
   sending=false;
