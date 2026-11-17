@@ -16,7 +16,7 @@ const DIST = path.join(ROOT, 'dist');
 const PAGES = ['index.html', 'privacy.html', 'terms.html', 'delete.html', '404.html'];
 const STATIC_FILES = [
   ...PAGES,
-  'app.js', 'delete.js',
+  'app.js', 'delete.js', 'pixel.js',
   'favicon.png', 'apple-touch-icon.png', 'og.jpg', 'robots.txt', 'sitemap.xml', '_headers', '_redirects',
   'hero-poster.webp',
   'header-logo.webp', 'founder.webp', 'founder-before-after.webp',
