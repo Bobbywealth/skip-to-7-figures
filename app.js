@@ -54,11 +54,37 @@ const UTM=(function(){
     const s=localStorage.getItem('sf7_utm');return s?JSON.parse(s):{};
   }catch(e){return {};}
 })();
+/* An event's name may be read as 'name', 'event_name' or 'event' depending on
+   who is listening - Meta's Conversions API calls it 'event_name' and rejects
+   an event that carries none. We send all three spellings plus an id, so no
+   consumer can ever be told a name is missing. */
+function newEventId(prefix){
+  try{
+    if(window.sf7Pixel&&typeof window.sf7Pixel.newId==='function') return window.sf7Pixel.newId(prefix||'ev');
+  }catch(e){}
+  return (prefix||'ev')+'-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10);
+}
+function readCookie(name){
+  try{
+    const hit=document.cookie.split('; ').find(c=>c.indexOf(name+'=')===0);
+    return hit?decodeURIComponent(hit.slice(name.length+1)):'';
+  }catch(e){ return ''; }
+}
 function trackEvent(name,data){
   try{
     const u=new URL(API+'/api/track');
     u.searchParams.set('path',location.pathname||'/');
-    const body=JSON.stringify({name:name,visitor_id:UID,data:data||{}});
+    const body=JSON.stringify({
+      name:name,
+      event_name:name,
+      event:name,
+      event_id:(data&&data.event_id)||newEventId(name),
+      visitor_id:UID,
+      fbp:readCookie('_fbp'),
+      fbc:readCookie('_fbc'),
+      page_url:location.href,
+      data:data||{}
+    });
     if(navigator.sendBeacon) navigator.sendBeacon(u.toString(),new Blob([body],{type:'text/plain;charset=UTF-8'}));
   }catch(e){}
 }
@@ -169,6 +195,9 @@ form.addEventListener('submit',async event=>{
     }
     errEl.hidden=true;
   }
+  /* one id for this conversion - the browser pixel event and the server-side
+     conversion event share it, so Meta counts the lead once, not twice */
+  const leadEventId=newEventId('lead');
   const payload={
     name:nameVal,
     email:emailVal,
@@ -178,6 +207,9 @@ form.addEventListener('submit',async event=>{
     interest:answers.interest,decision:answers.decision,
     source:'funnel',page_url:location.href,
     visitor_id:UID, ...UTM,
+    event_id:leadEventId,
+    fbp:readCookie('_fbp'),
+    fbc:readCookie('_fbc'),
     cf_turnstile_response:tsToken
   };
   try{
@@ -197,8 +229,10 @@ form.addEventListener('submit',async event=>{
       del.querySelector('a').href='/delete.html#email='+encodeURIComponent(payload.email)+'&token='+encodeURIComponent(data.delete_token);
     }
     answers={};fields.replaceChildren();form.hidden=true;done.hidden=false;done.querySelector('h3').focus();
-    /* Meta Pixel: application submitted = a lead */
-    if(typeof fbq==='function'){ try{ fbq('track','Lead'); }catch(e){} }
+    /* Meta Pixel: application submitted = a lead. The eventID matches the
+       server-side event so Meta counts one conversion, not two. */
+    if(window.sf7Pixel&&typeof window.sf7Pixel.track==='function'){ try{ window.sf7Pixel.track('Lead',{eventID:leadEventId}); }catch(e){} }
+    else if(typeof fbq==='function'){ try{ fbq('track','Lead',{eventID:leadEventId}); }catch(e){} }
     const cal=document.querySelector('#calwrap');
     if(cal&&!cal.dataset.built){cal.dataset.built='1';
       const summary='Application details:\nCapital: '+(payload.capital||'-')+'\nTimeline: '+(payload.timeline||'-')+'\nExperience: '+(payload.experience||'-')+'\nInterest: '+(payload.interest||'-')+'\nDecision maker: '+(payload.decision||'-')+'\nPhone: '+(payload.phone||'-');
@@ -218,8 +252,13 @@ back.addEventListener('click',()=>{remember();index--;render(true)});
 /* Meta Pixel: fire Schedule when a Calendly booking is actually made.
    The Calendly widget posts calendly.event_scheduled to the parent window. */
 window.addEventListener('message',function(e){
-  if(e && e.origin==='https://calendly.com' && e.data && e.data.event==='calendly.event_scheduled' && typeof fbq==='function'){
-    try{ fbq('track','Schedule'); }catch(err){}
+  if(e && e.origin==='https://calendly.com' && e.data && e.data.event==='calendly.event_scheduled'){
+    const schedId=newEventId('sched');
+    if(window.sf7Pixel&&typeof window.sf7Pixel.track==='function'){ try{ window.sf7Pixel.track('Schedule',{eventID:schedId}); }catch(err){} }
+    else if(typeof fbq==='function'){ try{ fbq('track','Schedule',{eventID:schedId}); }catch(err){} }
+    /* record it on our side too, so the server can send the matching
+       server-side conversion event */
+    trackEvent('schedule',{event_id:schedId});
   }
 });
 document.querySelector('#reset').addEventListener('click',()=>{
@@ -265,7 +304,9 @@ form.addEventListener('focusin',()=>{ if(started) return; started=true; trackEve
     if(!sessionStorage.getItem('sf7_seen')){
       sessionStorage.setItem('sf7_seen','1');
       /* text/plain keeps this a simple request so it never needs a CORS preflight */
-      navigator.sendBeacon(API+'/api/track?path='+encodeURIComponent(location.pathname||'/'),new Blob([''],{type:'text/plain;charset=UTF-8'}));
+      /* a page view is still an event - it carries a name, never an empty body */
+      const pvBody=JSON.stringify({name:'view',event_name:'view',event:'view',event_id:newEventId('pv'),visitor_id:UID,fbp:readCookie('_fbp'),fbc:readCookie('_fbc'),page_url:location.href,data:{}});
+      navigator.sendBeacon(API+'/api/track?path='+encodeURIComponent(location.pathname||'/'),new Blob([pvBody],{type:'text/plain;charset=UTF-8'}));
     }
   }catch(e){}
 })();
