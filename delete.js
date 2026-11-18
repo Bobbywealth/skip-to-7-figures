@@ -1,4 +1,4 @@
-const API='https://skip-to-7-figures-admin.skip7figures.workers.dev';
+const API='https://admin.skipto7figures.com';
 /* the delete code travels in the URL fragment so it never reaches the server logs */
 const q=new URLSearchParams(location.hash.replace(/^#/,''));
 if(q.get('email')) document.getElementById('email').value=q.get('email');

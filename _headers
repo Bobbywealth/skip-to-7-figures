@@ -3,7 +3,7 @@
 # does NOT need 'unsafe-inline'.
 
 /*
-  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; img-src 'self' data: https://www.facebook.com; media-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://assets.calendly.com; script-src 'self' https://challenges.cloudflare.com https://assets.calendly.com https://connect.facebook.net; frame-src 'self' https://challenges.cloudflare.com https://calendly.com; connect-src 'self' https://skip-to-7-figures-admin.skip7figures.workers.dev https://challenges.cloudflare.com https://www.facebook.com; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; img-src 'self' data: https://www.facebook.com; media-src 'self'; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://assets.calendly.com; script-src 'self' https://challenges.cloudflare.com https://assets.calendly.com https://connect.facebook.net; frame-src 'self' https://challenges.cloudflare.com https://calendly.com; connect-src 'self' https://admin.skipto7figures.com https://skip-to-7-figures-admin.skip7figures.workers.dev https://challenges.cloudflare.com https://www.facebook.com; upgrade-insecure-requests
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin

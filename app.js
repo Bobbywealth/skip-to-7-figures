@@ -4,7 +4,7 @@
    the second block reads the answers object and the render function from the first. */
 
 document.documentElement.classList.add('js');
-const API='https://skip-to-7-figures-admin.skip7figures.workers.dev';
+const API='https://admin.skipto7figures.com';
 
 /* ---------- Cloudflare Turnstile (bot protection) ---------- */
 const TS_SITEKEY='0x4AAAAAAF-4Gnj0g3OX0_Xe';
