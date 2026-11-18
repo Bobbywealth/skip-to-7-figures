@@ -40,3 +40,27 @@ python3 -m http.server 8899 --bind 127.0.0.1 &
 
 > Note: the `og:image` / `twitter:image` tags in `index.html` use the absolute URL
 > `https://skip-to-7-figures.onrender.com/og.jpg` — **update those if the site ever moves to a custom domain.**
+
+## Tracking & events
+
+Every event this site emits carries a **name**, and it is sent under all three
+spellings a consumer might read: `name`, `event_name` and `event` — together
+with a unique `event_id`, the visitor id, the `fbp` / `fbc` click ids and the
+page URL.
+
+| Event          | Fired when                                       | Meta Pixel event |
+| -------------- | ------------------------------------------------ | ---------------- |
+| `view`         | page load                                        | `PageView`       |
+| `apply_start`  | first interaction with the application form      | —                |
+| `apply_complete` | application accepted (recorded server-side)     | `Lead`           |
+| `schedule`     | a real Calendly booking is made                  | `Schedule`       |
+
+- The browser pixel (`pixel.js`, pixel `1484110030240426`) and the server-side
+  Meta Conversions API event share the same `event_id`, so Meta counts a
+  conversion **once**, not twice.
+- The page-view beacon used to be sent with an empty body — an event with no
+  name at all. It now sends a named `view` event like every other event.
+- The backend (`https://skip-to-7-figures-admin.skip7figures.workers.dev`)
+  accepts an event name under any of `name` / `event_name` / `event` / `type`
+  and answers with the canonical name, and its webhook payloads carry
+  `event_name` too.
