@@ -231,8 +231,8 @@ form.addEventListener('submit',async event=>{
     answers={};fields.replaceChildren();form.hidden=true;done.hidden=false;done.querySelector('h3').focus();
     /* Meta Pixel: application submitted = a lead. The eventID matches the
        server-side event so Meta counts one conversion, not two. */
-    if(window.sf7Pixel&&typeof window.sf7Pixel.track==='function'){ try{ window.sf7Pixel.track('Lead',{eventID:leadEventId}); }catch(e){} }
-    else if(typeof fbq==='function'){ try{ fbq('track','Lead',{eventID:leadEventId}); }catch(e){} }
+    if(window.sf7Pixel&&typeof window.sf7Pixel.track==='function'){ try{ window.sf7Pixel.track('Lead',{},{eventID:leadEventId}); }catch(e){} }
+    else if(typeof fbq==='function'){ try{ fbq('track','Lead',{},{eventID:leadEventId}); }catch(e){} }
     const cal=document.querySelector('#calwrap');
     if(cal&&!cal.dataset.built){cal.dataset.built='1';
       const summary='Application details:\nCapital: '+(payload.capital||'-')+'\nTimeline: '+(payload.timeline||'-')+'\nExperience: '+(payload.experience||'-')+'\nInterest: '+(payload.interest||'-')+'\nDecision maker: '+(payload.decision||'-')+'\nPhone: '+(payload.phone||'-');
@@ -254,8 +254,8 @@ back.addEventListener('click',()=>{remember();index--;render(true)});
 window.addEventListener('message',function(e){
   if(e && e.origin==='https://calendly.com' && e.data && e.data.event==='calendly.event_scheduled'){
     const schedId=newEventId('sched');
-    if(window.sf7Pixel&&typeof window.sf7Pixel.track==='function'){ try{ window.sf7Pixel.track('Schedule',{eventID:schedId}); }catch(err){} }
-    else if(typeof fbq==='function'){ try{ fbq('track','Schedule',{eventID:schedId}); }catch(err){} }
+    if(window.sf7Pixel&&typeof window.sf7Pixel.track==='function'){ try{ window.sf7Pixel.track('Schedule',{},{eventID:schedId}); }catch(err){} }
+    else if(typeof fbq==='function'){ try{ fbq('track','Schedule',{},{eventID:schedId}); }catch(err){} }
     /* record it on our side too, so the server can send the matching
        server-side conversion event */
     trackEvent('schedule',{event_id:schedId});

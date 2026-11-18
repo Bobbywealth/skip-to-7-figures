@@ -15,11 +15,14 @@ function sf7NewId(prefix){
 window.sf7Pixel={
   id:SF7_PIXEL_ID,
   newId:sf7NewId,
-  /* fires a named event; the library queues it if it has not loaded yet */
-  track:function(name,params){
+  /* fires a named event; the library queues it if it has not loaded yet.
+     The de-duplication id goes in the 4th argument - passed inside the
+     params object it only lands in custom data and Meta cannot match the
+     browser event with the server one. */
+  track:function(name,params,opts){
     try{
       if(typeof fbq!=='function') return false;
-      fbq('track',name,params||{});
+      fbq('track',name,params||{},opts||{});
       return true;
     }catch(e){ return false; }
   }
@@ -28,5 +31,5 @@ fbq('init',SF7_PIXEL_ID);
 /* PageView once per page load */
 if(!window.__sf7PageViewSent){
   window.__sf7PageViewSent=true;
-  fbq('track','PageView',{eventID:sf7NewId('pv')});
+  fbq('track','PageView',{},{eventID:sf7NewId('pv')});
 }
