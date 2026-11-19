@@ -89,7 +89,7 @@ function trackEvent(name,data){
   }catch(e){}
 }
 const questions=[
-['capital','How much capital are you prepared to allocate?',['Under $5,000 / Not sure yet','$5,000–$9,999','$10,000–$24,999','$25,000–$49,999','$50,000–$99,999','$100,000–$250,000','$250,000+']],
+['capital','How much capital are you prepared to allocate?',['$5,000–$9,999','$10,000–$24,999','$25,000–$49,999','$50,000–$99,999','$100,000–$250,000','$250,000+']],
 ['timeline','When are you looking to get started?',['Immediately','Within 30 days','Within 1–3 months','Just researching']],
 ['experience','What is your current experience?',['Complete beginner','Already operating a business','Experienced entrepreneur / investor']],
 ['interest','What are you most interested in?',['Launching an e-commerce brand','Scaling an existing brand','Done-for-you business services','Exploring a business partnership']],
